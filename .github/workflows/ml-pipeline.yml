@@ -1,0 +1,79 @@
+name: ML Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # Opcional: el dataset es público; el secreto solo evita límites de uso anónimo.
+  HF_TOKEN: ${{ secrets.HF_TOKEN }}
+  MAX_FILE_MB: "50"   # GitHub avisa a 50 MB y bloquea a 100 MB por archivo
+
+jobs:
+  tests:
+    name: Pruebas unitarias
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: Instalar dependencias
+        run: python -m pip install -r requirements.txt
+      - name: Ejecutar pytest (cargador, transformaciones, reportes, límite de CSV)
+        run: python -m pytest -q tests
+
+  notebooks:
+    name: Ejecutar notebooks con el dataset completo
+    needs: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: Instalar dependencias
+        run: |
+          python -m pip install -r requirements.txt
+          python -m ipykernel install --user --name python3
+      - name: Notebook 01 - ingestión y transformación (descarga HF)
+        run: |
+          jupyter nbconvert --to notebook --execute --output-dir "$RUNNER_TEMP/nb" \
+            --ExecutePreprocessor.timeout=1800 notebooks/01-data-ingestion.ipynb
+      - name: Notebook 02 - exploración descriptiva (descarga HF)
+        run: |
+          jupyter nbconvert --to notebook --execute --output-dir "$RUNNER_TEMP/nb" \
+            --ExecutePreprocessor.timeout=1800 notebooks/02-data-description.ipynb
+      - name: Verificar entregables y restricciones de exportación
+        run: |
+          for f in reports/data-summary.txt reports/exploratory-analysis.txt data/raw/healthcare_raw.csv data/processed/healthcare_processed.csv; do
+            test -s "$f" || { echo "::error::Falta o está vacío: $f"; exit 1; }
+          done
+          for f in data/raw/healthcare_raw.csv data/processed/healthcare_processed.csv; do
+            rows=$(( $(wc -l < "$f") - 1 ))
+            echo "$f: $rows filas"
+            [ "$rows" -le 100000 ] || { echo "::error::$f supera 100000 filas"; exit 1; }
+          done
+          big=$(find data reports notebooks -type f -size +${MAX_FILE_MB}M)
+          [ -z "$big" ] || { echo "::error::Archivos que superan ${MAX_FILE_MB} MB: $big"; exit 1; }
+          grep -q "Split: train" reports/data-summary.txt
+          grep -q "Filas analizadas:" reports/exploratory-analysis.txt
+      - name: Publicar reportes como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: reportes
+          path: |
+            reports/data-summary.txt
+            reports/exploratory-analysis.txt
+          if-no-files-found: error
