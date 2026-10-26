@@ -1,0 +1,84 @@
+RESUMEN DEL DATAFRAME
+======================================================================
+Fecha de generación: 2026-10-26 00:43:48 UTC+0000
+
+Dataset: Nicolybgs/healthcare_data
+Configuración: default
+Split: train
+Carga: dataset completo (sin muestreo)
+
+Filas: 500000
+Columnas: 16
+Filas duplicadas: 0
+
+Nombres de columnas:
+available_extra_rooms_in_hospital, department, ward_facility_code, doctor_name, staff_available, patientid, age, gender, type_of_admission, severity_of_illness, health_conditions, visitors_with_patient, insurance, admission_deposit, stay_in_days, staff_availability_group
+
+Tipos de datos:
+- available_extra_rooms_in_hospital: int64
+- department: category
+- ward_facility_code: category
+- doctor_name: category
+- staff_available: int64
+- patientid: int64
+- age: category
+- gender: category
+- type_of_admission: category
+- severity_of_illness: category
+- health_conditions: category
+- visitors_with_patient: int64
+- insurance: category
+- admission_deposit: float64
+- stay_in_days: int64
+- staff_availability_group: category
+
+Valores nulos por columna (cantidad y porcentaje):
+- available_extra_rooms_in_hospital: 0 (0.00 %)
+- department: 0 (0.00 %)
+- ward_facility_code: 0 (0.00 %)
+- doctor_name: 0 (0.00 %)
+- staff_available: 0 (0.00 %)
+- patientid: 0 (0.00 %)
+- age: 0 (0.00 %)
+- gender: 0 (0.00 %)
+- type_of_admission: 0 (0.00 %)
+- severity_of_illness: 0 (0.00 %)
+- health_conditions: 151888 (30.38 %)
+- visitors_with_patient: 0 (0.00 %)
+- insurance: 0 (0.00 %)
+- admission_deposit: 0 (0.00 %)
+- stay_in_days: 0 (0.00 %)
+- staff_availability_group: 0 (0.00 %)
+
+Transformaciones aplicadas:
+- strip_text_values: Eliminación de espacios iniciales/finales en columnas de texto. Filas 500000 -> 500000; columnas 15 -> 15.
+- convert_numeric_types: Conversión validada a tipos numéricos (pd.to_numeric); valores no convertibles se reportan, no se eliminan. Filas 500000 -> 500000; columnas 15 -> 15.
+- drop_exact_duplicates: Eliminación de registros exactamente duplicados (todas las columnas iguales). Filas 500000 -> 500000; columnas 15 -> 15.
+- normalize_column_names: Normalización de nombres de columnas a snake_case. Filas 500000 -> 500000; columnas 15 -> 15.
+- standardize_categories: Espacios internos normalizados y columnas de texto convertidas a 'category' (severity_of_illness y age ordenadas); nulos conservados. Filas 500000 -> 500000; columnas 15 -> 15.
+- add_staff_availability_group: Nueva columna staff_availability_group (Bajo 0-3, Medio 4-6, Alto 7+); umbrales definidos por el proyecto, no por la ficha del dataset. Filas 500000 -> 500000; columnas 15 -> 16.
+
+Estadísticas descriptivas (columnas numéricas):
+                                      count       mean        std       min        25%        50%         75%         max
+available_extra_rooms_in_hospital  500000.0      3.639      2.698     0.000      2.000      3.000       4.000      24.000
+staff_available                    500000.0      5.020      3.158     0.000      2.000      5.000       8.000      10.000
+patientid                          500000.0  63150.519  41689.480 -3269.000  25442.000  57864.000  103392.000  134400.000
+visitors_with_patient              500000.0      3.549      2.241     0.000      2.000      3.000       4.000      32.000
+admission_deposit                  500000.0   4722.316   1047.324  1654.005   4071.715   4627.004    5091.613   10104.726
+stay_in_days                       500000.0     12.381      7.913     3.000      8.000      9.000      11.000      51.000
+
+Variables categóricas (categorías únicas y más frecuente):
+- department: 5 categorías; más frecuente: gynecology (343478)
+- ward_facility_code: 6 categorías; más frecuente: F (120538)
+- doctor_name: 9 categorías; más frecuente: Dr Sarah (99596)
+- age: 10 categorías; más frecuente: 21-30 (159793)
+- gender: 3 categorías; más frecuente: Female (370810)
+- type_of_admission: 3 categorías; más frecuente: Trauma (310536)
+- severity_of_illness: 3 categorías; más frecuente: Moderate (280197)
+- health_conditions: 5 categorías; más frecuente: Other (94411)
+- insurance: 2 categorías; más frecuente: Yes (392960)
+- staff_availability_group: 3 categorías; más frecuente: Alto (7+) (182584)
+
+Exportaciones CSV (el resumen corresponde al DataFrame completo, NO a los CSV):
+- data/raw/healthcare_raw.csv: 100000 de 500000 filas (parcial: primeras filas), 9.0 MB
+- data/processed/healthcare_processed.csv: 100000 de 500000 filas (parcial: primeras filas), 10.09 MB

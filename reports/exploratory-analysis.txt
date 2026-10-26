@@ -1,0 +1,319 @@
+REPORTE DE ANÁLISIS EXPLORATORIO
+======================================================================
+Fecha de generación: 2026-10-26 00:43:57 UTC+0000
+
+1. IDENTIFICACIÓN DEL DATASET
+----------------------------------------------------------------------
+Dataset: Nicolybgs/healthcare_data  (https://huggingface.co/datasets/Nicolybgs/healthcare_data)
+Configuración: default | Split: train
+Carga: dataset completo (sin muestreo) (el análisis NO usa los CSV de data/, que están limitados a 100000 filas)
+Filas analizadas: 500000 | Columnas: 16
+Ficha de Hugging Face: sin dataset card; licencia, procedencia, carácter sintético/real y periodo NO documentados.
+
+2. TRANSFORMACIONES APLICADAS (en memoria)
+----------------------------------------------------------------------
+strip_text_values: Eliminación de espacios iniciales/finales en columnas de texto. Filas 500000 -> 500000; columnas 15 -> 15.
+convert_numeric_types: Conversión validada a tipos numéricos (pd.to_numeric); valores no convertibles se reportan, no se eliminan. Filas 500000 -> 500000; columnas 15 -> 15.
+drop_exact_duplicates: Eliminación de registros exactamente duplicados (todas las columnas iguales). Filas 500000 -> 500000; columnas 15 -> 15.
+normalize_column_names: Normalización de nombres de columnas a snake_case. Filas 500000 -> 500000; columnas 15 -> 15.
+standardize_categories: Espacios internos normalizados y columnas de texto convertidas a 'category' (severity_of_illness y age ordenadas); nulos conservados. Filas 500000 -> 500000; columnas 15 -> 15.
+add_staff_availability_group: Nueva columna staff_availability_group (Bajo 0-3, Medio 4-6, Alto 7+); umbrales definidos por el proyecto, no por la ficha del dataset. Filas 500000 -> 500000; columnas 15 -> 16.
+
+3. COLUMNAS Y TIPOS
+----------------------------------------------------------------------
+- available_extra_rooms_in_hospital: int64
+- department: category
+- ward_facility_code: category
+- doctor_name: category
+- staff_available: int64
+- patientid: int64
+- age: category
+- gender: category
+- type_of_admission: category
+- severity_of_illness: category
+- health_conditions: category
+- visitors_with_patient: int64
+- insurance: category
+- admission_deposit: float64
+- stay_in_days: int64
+- staff_availability_group: category
+
+4. VALORES NULOS (cantidad y porcentaje) Y DUPLICADOS
+----------------------------------------------------------------------
+                                    nulos  porcentaje
+available_extra_rooms_in_hospital       0        0.00
+department                              0        0.00
+ward_facility_code                      0        0.00
+doctor_name                             0        0.00
+staff_available                         0        0.00
+patientid                               0        0.00
+age                                     0        0.00
+gender                                  0        0.00
+type_of_admission                       0        0.00
+severity_of_illness                     0        0.00
+health_conditions                  151888       30.38
+visitors_with_patient                   0        0.00
+insurance                               0        0.00
+admission_deposit                       0        0.00
+stay_in_days                            0        0.00
+staff_availability_group                0        0.00
+
+Filas duplicadas: 0
+
+5. ESTADÍSTICAS DESCRIPTIVAS NUMÉRICAS
+----------------------------------------------------------------------
+                                      count       mean        std       min        25%        50%         75%         max    mediana
+available_extra_rooms_in_hospital  500000.0      3.639      2.698     0.000      2.000      3.000       4.000      24.000      3.000
+staff_available                    500000.0      5.020      3.158     0.000      2.000      5.000       8.000      10.000      5.000
+patientid                          500000.0  63150.519  41689.480 -3269.000  25442.000  57864.000  103392.000  134400.000  57864.000
+visitors_with_patient              500000.0      3.549      2.241     0.000      2.000      3.000       4.000      32.000      3.000
+admission_deposit                  500000.0   4722.316   1047.324  1654.005   4071.715   4627.004    5091.613   10104.726   4627.004
+stay_in_days                       500000.0     12.381      7.913     3.000      8.000      9.000      11.000      51.000      9.000
+
+6. FRECUENCIAS: department
+----------------------------------------------------------------------
+                    registros  porcentaje
+department                               
+TB & Chest disease      22890        4.58
+anesthesia              44179        8.84
+gynecology             343478       68.70
+radiotherapy            84315       16.86
+surgery                  5138        1.03
+
+7. FRECUENCIAS: ward_facility_code
+----------------------------------------------------------------------
+                    registros  porcentaje
+ward_facility_code                       
+A                       46551        9.31
+B                      103885       20.78
+C                       14597        2.92
+D                      119055       23.81
+E                       95374       19.07
+F                      120538       24.11
+
+8. FRECUENCIAS: doctor_name
+----------------------------------------------------------------------
+             registros  porcentaje
+doctor_name                       
+Dr Isaac          3359        0.67
+Dr John          51263       10.25
+Dr Mark          44410        8.88
+Dr Nathan        70777       14.16
+Dr Olivia        98352       19.67
+Dr Sam           55711       11.14
+Dr Sarah         99596       19.92
+Dr Simon          1779        0.36
+Dr Sophia        74753       14.95
+
+9. FRECUENCIAS: age
+----------------------------------------------------------------------
+        registros  porcentaje
+age                          
+0-10         3368        0.67
+11-20       46536        9.31
+21-30      159793       31.96
+31-40      133373       26.67
+41-50       80406       16.08
+51-60       21718        4.34
+61-70       26556        5.31
+71-80       18703        3.74
+81-90        8181        1.64
+91-100       1366        0.27
+
+10. FRECUENCIAS: gender
+----------------------------------------------------------------------
+        registros  porcentaje
+gender                       
+Female     370810       74.16
+Male       103480       20.70
+Other       25710        5.14
+
+11. FRECUENCIAS: type_of_admission
+----------------------------------------------------------------------
+                   registros  porcentaje
+type_of_admission                       
+Emergency             135784       27.16
+Trauma                310536       62.11
+Urgent                 53680       10.74
+
+12. FRECUENCIAS: severity_of_illness
+----------------------------------------------------------------------
+                     registros  porcentaje
+severity_of_illness                       
+Minor                   131537       26.31
+Moderate                280197       56.04
+Extreme                  88266       17.65
+
+13. FRECUENCIAS: health_conditions
+----------------------------------------------------------------------
+                     registros  porcentaje
+health_conditions                         
+Asthama                  65514       13.10
+Diabetes                 73644       14.73
+Heart disease            35141        7.03
+High Blood Pressure      79402       15.88
+Other                    94411       18.88
+(nulo)                  151888       30.38
+
+14. FRECUENCIAS: insurance
+----------------------------------------------------------------------
+           registros  porcentaje
+insurance                       
+No            107040       21.41
+Yes           392960       78.59
+
+15. FRECUENCIAS: staff_availability_group
+----------------------------------------------------------------------
+                          registros  porcentaje
+staff_availability_group                       
+Bajo (0-3)                   180291       36.06
+Medio (4-6)                  137125       27.42
+Alto (7+)                    182584       36.52
+
+16. ESTANCIA Y DEPÓSITO: DISTRIBUCIÓN GENERAL
+----------------------------------------------------------------------
+Valores atípicos (regla 1.5xIQR, conservados): {'stay_in_days': 111707, 'admission_deposit': 41677}
+
+17. COMPARACIÓN POR DEPARTAMENTO
+----------------------------------------------------------------------
+                    registros  stay_in_days_mean  stay_in_days_median  stay_in_days_std  stay_in_days_min  stay_in_days_max  admission_deposit_mean  admission_deposit_median  admission_deposit_std  admission_deposit_min  admission_deposit_max
+department                                                                                                                                                                                                                                        
+TB & Chest disease      22890              21.14                 24.0              8.57                 4                41                 4798.82                   4682.72                1070.73                1818.93                9473.51
+anesthesia              44179              27.54                 30.0              8.04                 9                51                 4825.66                   4702.52                1070.29                1715.80               10104.73
+gynecology             343478               8.64                  9.0              1.06                 3                14                 4692.08                   4599.54                1038.73                1654.01                9899.19
+radiotherapy            84315              16.20                 20.0              8.47                 3                33                 4768.67                   4675.91                1065.05                1889.78                9692.65
+surgery                  5138              30.74                 35.0             11.24                 8                51                 4753.70                   4718.34                 909.97                2171.49                9585.47
+
+18. COMPARACIÓN POR SEVERIDAD DE LA ENFERMEDAD
+----------------------------------------------------------------------
+                     registros  stay_in_days_mean  stay_in_days_median  stay_in_days_std  stay_in_days_min  stay_in_days_max  admission_deposit_mean  admission_deposit_median  admission_deposit_std  admission_deposit_min  admission_deposit_max
+severity_of_illness                                                                                                                                                                                                                                
+Minor                   131537              11.45                  9.0              6.97                 3                51                 4749.10                   4636.65                1058.42                1654.01                9813.47
+Moderate                280197              12.72                  9.0              8.18                 3                51                 4718.71                   4621.39                1049.48                1715.80               10104.73
+Extreme                  88266              12.69                  9.0              8.25                 3                50                 4693.85                   4630.06                1022.66                1744.90                9897.66
+
+19. COMPARACIÓN POR GRUPO DE DISPONIBILIDAD DE PERSONAL
+----------------------------------------------------------------------
+                          registros  stay_in_days_mean  stay_in_days_median  stay_in_days_std  stay_in_days_min  stay_in_days_max  admission_deposit_mean  admission_deposit_median  admission_deposit_std  admission_deposit_min  admission_deposit_max
+staff_availability_group                                                                                                                                                                                                                                
+Bajo (0-3)                   180291              12.26                  9.0              7.74                 3                51                 4722.89                   4625.05                1048.70                1654.01                9872.65
+Medio (4-6)                  137125              12.59                  9.0              8.18                 3                51                 4718.34                   4626.81                1043.22                1690.92                9657.61
+Alto (7+)                    182584              12.35                  9.0              7.88                 3                50                 4724.74                   4628.78                1049.04                1725.69               10104.73
+
+20. COMPARACIÓN POR PERSONAL DISPONIBLE (0-10)
+----------------------------------------------------------------------
+                 registros  stay_in_days_mean  stay_in_days_median  stay_in_days_std  stay_in_days_min  stay_in_days_max  admission_deposit_mean  admission_deposit_median  admission_deposit_std  admission_deposit_min  admission_deposit_max
+staff_available                                                                                                                                                                                                                                
+0                    45032              12.19                  9.0              7.66                 4                48                 4718.53                   4622.30                1048.40                1789.17                9463.34
+1                    44931              12.20                  9.0              7.67                 3                46                 4723.84                   4628.14                1047.66                1825.58                9813.47
+2                    44670              12.21                  9.0              7.66                 3                47                 4728.02                   4626.35                1045.27                1654.01                9872.65
+3                    45658              12.43                  9.0              7.97                 3                51                 4721.24                   4623.32                1053.36                1695.30                9815.57
+4                    45290              12.37                  9.0              7.90                 3                49                 4717.85                   4622.54                1043.24                1750.22                9465.65
+5                    45215              12.45                  9.0              7.94                 3                51                 4720.10                   4629.46                1044.21                1690.92                9657.61
+6                    46620              12.94                  9.0              8.65                 3                50                 4717.11                   4627.98                1042.26                1805.16                9552.02
+7                    45703              12.39                  9.0              7.92                 3                48                 4726.41                   4631.09                1047.31                1747.38               10104.73
+8                    45583              12.35                  9.0              7.90                 3                50                 4723.50                   4630.19                1048.52                1725.69                9611.32
+9                    45530              12.31                  9.0              7.81                 3                48                 4725.65                   4627.74                1048.99                1727.94                9897.66
+10                   45768              12.33                  9.0              7.88                 4                49                 4723.39                   4626.73                1051.37                1776.90                9899.19
+
+21. MEDIANA DE ESTANCIA: DEPARTAMENTO x SEVERIDAD
+----------------------------------------------------------------------
+severity_of_illness  Minor  Moderate  Extreme
+department                                   
+TB & Chest disease    24.0      25.0     24.0
+anesthesia            29.0      30.0     30.0
+gynecology             9.0       9.0      9.0
+radiotherapy          20.0      21.0     20.0
+surgery               33.0      35.0     34.0
+
+Registros:
+severity_of_illness  Minor  Moderate  Extreme
+department                                   
+TB & Chest disease    5505     13040     4345
+anesthesia            9170     26487     8522
+gynecology           98393    185472    59613
+radiotherapy         17961     52271    14083
+surgery                508      2927     1703
+
+22. COMPARACIÓN POR TYPE_OF_ADMISSION
+----------------------------------------------------------------------
+                   registros  stay_in_days_mean  stay_in_days_median  stay_in_days_std  stay_in_days_min  stay_in_days_max  admission_deposit_mean  admission_deposit_median  admission_deposit_std  admission_deposit_min  admission_deposit_max
+type_of_admission                                                                                                                                                                                                                                
+Emergency             135784              11.74                  9.0              7.23                 3                51                 4686.78                   4613.78                1038.63                1710.21                9785.69
+Trauma                310536              12.66                  9.0              8.19                 3                50                 4736.05                   4638.93                1045.43                1690.92               10104.73
+Urgent                 53680              12.36                  9.0              7.81                 3                51                 4732.78                   4590.98                1077.68                1654.01                9759.70
+
+23. COMPARACIÓN POR INSURANCE
+----------------------------------------------------------------------
+           registros  stay_in_days_mean  stay_in_days_median  stay_in_days_std  stay_in_days_min  stay_in_days_max  admission_deposit_mean  admission_deposit_median  admission_deposit_std  admission_deposit_min  admission_deposit_max
+insurance                                                                                                                                                                                                                                
+No            107040              12.38                  9.0              7.93                 3                51                 4717.08                   4627.67                1042.10                1715.80                9872.65
+Yes           392960              12.38                  9.0              7.91                 3                51                 4723.74                   4626.82                1048.74                1654.01               10104.73
+
+24. COMPARACIÓN POR WARD_FACILITY_CODE
+----------------------------------------------------------------------
+                    registros  stay_in_days_mean  stay_in_days_median  stay_in_days_std  stay_in_days_min  stay_in_days_max  admission_deposit_mean  admission_deposit_median  admission_deposit_std  admission_deposit_min  admission_deposit_max
+ward_facility_code                                                                                                                                                                                                                                
+A                       46551              22.53                 23.0              9.99                 3                51                 4910.59                   4808.51                 962.33                1715.80               10104.73
+B                      103885               8.66                  9.0              1.03                 3                13                 4735.99                   4669.49                 974.52                1710.21                9897.66
+C                       14597              20.20                 22.0             10.17                 4                49                 4519.33                   4562.90                 894.30                1799.69                8903.67
+D                      119055               8.65                  9.0              1.04                 3                14                 4550.86                   4499.14                 972.43                1654.01                9899.19
+E                       95374              19.72                 22.0              9.78                 3                51                 4770.39                   4631.17                1123.01                1925.88                9616.62
+F                      120538               8.61                  9.0              1.11                 3                13                 4793.71                   4634.92                1135.95                1727.94                9785.69
+
+25. COMPARACIÓN POR HEALTH_CONDITIONS
+----------------------------------------------------------------------
+                     registros  stay_in_days_mean  stay_in_days_median  stay_in_days_std  stay_in_days_min  stay_in_days_max  admission_deposit_mean  admission_deposit_median  admission_deposit_std  admission_deposit_min  admission_deposit_max
+health_conditions                                                                                                                                                                                                                                  
+Asthama                  65514              12.38                  9.0              7.91                 3                50                 4722.26                   4628.14                1047.92                1654.01                9872.65
+Diabetes                 73644              12.36                  9.0              7.91                 3                49                 4721.86                   4625.72                1047.97                1799.69                9897.66
+Heart disease            35141              12.31                  9.0              7.85                 3                50                 4715.80                   4622.80                1043.76                1747.38                9759.70
+High Blood Pressure      79402              12.41                  9.0              7.91                 3                51                 4724.05                   4626.84                1048.68                1695.30                9702.50
+Other                    94411              12.41                  9.0              7.93                 3                49                 4725.85                   4628.78                1046.74                1744.90                9899.19
+NaN                     151888              12.38                  9.0              7.92                 3                51                 4720.97                   4627.07                1047.23                1710.21               10104.73
+
+26. COMPARACIÓN POR AGE
+----------------------------------------------------------------------
+        registros  stay_in_days_mean  stay_in_days_median  stay_in_days_std  stay_in_days_min  stay_in_days_max  admission_deposit_mean  admission_deposit_median  admission_deposit_std  admission_deposit_min  admission_deposit_max
+age                                                                                                                                                                                                                                   
+0-10         3368              27.25                 27.0              5.61                 9                48                 4940.73                   4759.92                1107.70                2067.25                9692.65
+11-20       46536               8.69                  9.0              1.07                 3                13                 4746.15                   4643.07                1057.74                1654.01                9611.32
+21-30      159793              10.72                  9.0              6.14                 4                49                 4747.30                   4640.12                1057.63                1695.30               10104.73
+31-40      133373               8.94                  9.0              2.98                 3                26                 4656.65                   4565.09                1032.15                1725.69                9899.19
+41-50       80406               9.04                  9.0              2.93                 3                25                 4654.69                   4584.61                1019.22                1690.92                9897.66
+51-60       21718              27.47                 26.0              5.93                 9                50                 4812.71                   4710.74                1090.64                1988.49                9657.61
+61-70       26556              27.13                 26.0              5.92                 9                51                 4825.78                   4720.29                1035.21                1715.80                9563.40
+71-80       18703              26.36                 25.0              5.81                 9                50                 4864.06                   4754.35                1036.24                2046.63                9203.10
+81-90        8181              26.28                 24.0              6.18                12                49                 4814.38                   4695.89                1079.28                2032.72                9388.93
+91-100       1366              27.82                 28.0              4.95                13                51                 4900.42                   4734.29                1152.94                2140.76                9186.69
+
+27. COMPARACIÓN POR GENDER
+----------------------------------------------------------------------
+        registros  stay_in_days_mean  stay_in_days_median  stay_in_days_std  stay_in_days_min  stay_in_days_max  admission_deposit_mean  admission_deposit_median  admission_deposit_std  admission_deposit_min  admission_deposit_max
+gender                                                                                                                                                                                                                                
+Female     370810               9.52                  9.0              4.28                 3                50                 4698.60                   4605.19                1040.24                1654.01               10104.73
+Male       103480              20.59                 22.0              9.95                 3                51                 4787.33                   4686.33                1062.28                1715.80                9692.65
+Other       25710              20.53                 22.0              9.95                 3                51                 4802.75                   4694.24                1073.12                1799.69                9510.95
+
+28. CORRELACIÓN DE SPEARMAN (asociación, no causalidad)
+----------------------------------------------------------------------
+                                   stay_in_days  admission_deposit  staff_available  available_extra_rooms_in_hospital  visitors_with_patient
+stay_in_days                              1.000              0.014            0.005                             -0.070                 -0.045
+admission_deposit                         0.014              1.000            0.001                             -0.129                 -0.151
+staff_available                           0.005              0.001            1.000                             -0.002                 -0.001
+available_extra_rooms_in_hospital        -0.070             -0.129           -0.002                              1.000                  0.178
+visitors_with_patient                    -0.045             -0.151           -0.001                              0.178                  1.000
+
+29. ADVERTENCIAS DE CALIDAD
+----------------------------------------------------------------------
+- health_conditions tiene 151888 nulos (30.38 %); la ficha no explica su significado: se conservan como nulos, no se imputan.
+- patientid se repite en 373601 filas y tiene 888 valores negativos; no se usa como identificador único.
+- Categoría 'Asthama' se conserva tal como figura en la fuente (posible error ortográfico).
+
+30. LIMITACIONES
+----------------------------------------------------------------------
+- Análisis descriptivo: las diferencias entre grupos NO implican causalidad.
+- La ficha no documenta periodo, población, procedencia, licencia ni significado/unidades de las variables (p. ej., moneda de admission_deposit).
+- El depósito de admisión no necesariamente representa el costo total del tratamiento.
+- Los umbrales de staff_availability_group son una convención del proyecto.
+- No se puede extrapolar a otros hospitales.
