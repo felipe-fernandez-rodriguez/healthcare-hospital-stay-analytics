@@ -237,12 +237,6 @@ Thumbs.db
 .env.*
 !.env.example
 
-# Datos: el CSV crudo (primeras 100.000 filas) se regenera con el notebook 01 y no se sube.
-# El CSV procesado (~10 MB, primeras 100.000 filas) SÍ se versiona; cualquier otro CSV queda fuera.
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-!data/processed/healthcare_processed.csv
+# Datos: los dos CSV (primeras 100.000 filas, ~9 y ~10 MB) los genera y versiona GitHub Actions.
 
 # Los reportes TXT (reports/) y los notebooks ejecutados SÍ se versionan como evidencia.

@@ -7,7 +7,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write   # el job de notebooks confirma los archivos generados en main
+
+concurrency:
+  group: ml-pipeline-${{ github.ref }}
+  cancel-in-progress: false
 
 env:
   # Opcional: el dataset es público; el secreto solo evita límites de uso anónimo.
@@ -76,4 +80,18 @@ jobs:
           path: |
             reports/data-summary.txt
             reports/exploratory-analysis.txt
+            data/raw/healthcare_raw.csv
+            data/processed/healthcare_processed.csv
           if-no-files-found: error
+      - name: Confirmar archivos generados en el repositorio (solo main)
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f reports/data-summary.txt reports/exploratory-analysis.txt             data/raw/healthcare_raw.csv data/processed/healthcare_processed.csv             notebooks/01-data-ingestion.ipynb notebooks/02-data-description.ipynb
+          if git diff --cached --quiet; then
+            echo "No hay cambios que confirmar."; exit 0
+          fi
+          git commit -m "chore: actualizar CSV, reportes y notebooks ejecutados [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main

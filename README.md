@@ -25,8 +25,8 @@ El enfoque es descriptivo: las diferencias observadas **no** implican causalidad
 healthcare-hospital-stay-analytics/
 ├── .github/workflows/ml-pipeline.yml   # GitHub Actions: pruebas + ejecución de notebooks
 ├── data/
-│   ├── raw/                            # CSV original (primeras 100.000 filas) – se regenera, no se versiona
-│   └── processed/                      # CSV transformado (primeras 100.000 filas, ~10 MB) – versionado
+│   ├── raw/                            # CSV original (primeras 100.000 filas) – lo genera Actions
+│   └── processed/                      # CSV transformado (primeras 100.000 filas, ~10 MB) – lo genera Actions
 ├── docs/
 │   ├── guia-proyecto-restaurante-analitica-ejemplo.docx   # plantilla de ejemplo (sin modificar)
 │   └── proyecto_analisis_estancia_hospitalaria.docx       # documento del proyecto (EA2)
@@ -69,9 +69,8 @@ healthcare-hospital-stay-analytics/
 
 El límite se aplica **solo a los CSV exportados** (primeras 100.000 filas, sin aleatoriedad) para no superar el peso permitido por GitHub (aviso a 50 MB, bloqueo a 100 MB). Los DataFrames, los resúmenes y la exploración usan las 500.000 filas. Los CSV **no representan el dataset completo**.
 
-- `data/raw/healthcare_raw.csv` (~9 MB): se regenera con el notebook 01 y está en `.gitignore`.
-- `data/processed/healthcare_processed.csv` (~10 MB): se versiona.
-- `reports/*.txt` y los notebooks ejecutados se versionan como evidencia.
+- `data/raw/healthcare_raw.csv` (~9 MB) y `data/processed/healthcare_processed.csv` (~10 MB): se versionan; los genera el workflow (o el notebook 01 en local).
+- `reports/*.txt` y los notebooks ejecutados también se versionan como evidencia.
 
 ## Instalación y ejecución
 
@@ -105,7 +104,7 @@ python -m pytest -q tests
 El workflow `.github/workflows/ml-pipeline.yml` se ejecuta en `push` a `main`, en `pull_request` y manualmente:
 
 1. **tests:** instala dependencias y ejecuta `pytest` (cargador, transformaciones, resumen, límite de exportación). No descarga el dataset.
-2. **notebooks:** ejecuta ambos notebooks (cada uno descarga el dataset una vez), verifica que existan los reportes y CSV, que cada CSV tenga ≤ 100.000 filas y que ningún archivo supere 50 MB; publica los reportes como artefacto. No hace commits. El secreto `HF_TOKEN` es opcional.
+2. **notebooks:** ejecuta ambos notebooks (cada uno descarga el dataset una vez), verifica que existan los reportes y CSV, que cada CSV tenga ≤ 100.000 filas y que ningún archivo supere 50 MB; publica reportes y CSV como artefacto y, **solo en `main`**, hace commit de los CSV, los reportes y los notebooks ejecutados con `[skip ci]` (no se re-dispara). El secreto `HF_TOKEN` es opcional.
 
 ## Limitaciones
 
