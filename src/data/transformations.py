@@ -46,7 +46,7 @@ def to_snake_case(name: str) -> str:
     return name.strip("_").lower()
 
 
-def _record(name: str, description: str, before: pd.DataFrame, after: pd.DataFrame, **extra: Any) -> dict[str, Any]:
+def make_record(name: str, description: str, before: pd.DataFrame, after: pd.DataFrame, **extra: Any) -> dict[str, Any]:
     return {
         "paso": name,
         "descripcion": description,
@@ -68,7 +68,7 @@ def strip_text_values(df: pd.DataFrame) -> Step:
         if n:
             changed[col] = n
         out[col] = stripped
-    return out, _record(
+    return out, make_record(
         "strip_text_values",
         "Eliminación de espacios iniciales/finales en columnas de texto.",
         df, out, valores_modificados=sum(changed.values()), por_columna=changed,
@@ -94,7 +94,7 @@ def convert_numeric_types(df: pd.DataFrame) -> Step:
     negatives = {
         c: int((out[c] < 0).sum()) for c in NUMERIC_COLUMNS if c in out.columns and (out[c] < 0).any()
     }
-    return out, _record(
+    return out, make_record(
         "convert_numeric_types",
         "Conversión validada a tipos numéricos (pd.to_numeric); valores no convertibles se reportan, no se eliminan.",
         df, out, valores_no_convertibles=sum(coerced.values()), no_convertibles_por_columna=coerced,
@@ -105,7 +105,7 @@ def convert_numeric_types(df: pd.DataFrame) -> Step:
 def drop_exact_duplicates(df: pd.DataFrame) -> Step:
     """Elimina filas idénticas en todas las columnas (``patientid`` no es único en el dataset)."""
     out = df.drop_duplicates().reset_index(drop=True)
-    return out, _record(
+    return out, make_record(
         "drop_exact_duplicates",
         "Eliminación de registros exactamente duplicados (todas las columnas iguales).",
         df, out, duplicados_eliminados=len(df) - len(out),
@@ -116,7 +116,7 @@ def normalize_column_names(df: pd.DataFrame) -> Step:
     """Renombra las columnas a ``snake_case`` conservando la correspondencia original."""
     mapping = {c: to_snake_case(c) for c in df.columns}
     out = df.rename(columns=mapping)
-    return out, _record(
+    return out, make_record(
         "normalize_column_names",
         "Normalización de nombres de columnas a snake_case.",
         df, out, correspondencia=mapping,
@@ -147,7 +147,7 @@ def standardize_categories(df: pd.DataFrame) -> Step:
         elif col in out.columns:
             out[col] = out[col].astype("category")
     unexpected = int(out["severity_of_illness"].isna().sum() - df["severity_of_illness"].isna().sum())
-    return out, _record(
+    return out, make_record(
         "standardize_categories",
         "Espacios internos normalizados y columnas de texto convertidas a 'category' "
         "(severity_of_illness y age ordenadas); nulos conservados.",
@@ -161,7 +161,7 @@ def add_staff_availability_group(df: pd.DataFrame) -> Step:
     out["staff_availability_group"] = pd.cut(
         out["staff_available"], bins=STAFF_BINS, labels=STAFF_LABELS, ordered=True
     )
-    return out, _record(
+    return out, make_record(
         "add_staff_availability_group",
         "Nueva columna staff_availability_group (Bajo 0-3, Medio 4-6, Alto 7+); umbrales definidos "
         "por el proyecto, no por la ficha del dataset.",

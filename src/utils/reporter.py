@@ -35,8 +35,13 @@ class DatasetSummarizer:
         dataset_info: dict[str, Any] | None = None,
         transformations: list[str] | None = None,
         exports: list[dict[str, Any]] | None = None,
+        extra_sections: list[tuple[str, str | list[str] | pd.DataFrame]] | None = None,
     ) -> str:
-        """Construye el texto del resumen (todo se calcula desde ``df``)."""
+        """Construye el texto del resumen (todo se calcula desde ``df``).
+
+        ``extra_sections`` agrega secciones ``(título, contenido)`` al final (p. ej. fórmulas,
+        rutas de resultados y limitaciones de AE3), sin duplicar la lógica del resumen base.
+        """
         if not isinstance(df, pd.DataFrame):
             raise TypeError("Se esperaba un pandas.DataFrame.")
         if df.empty:
@@ -88,6 +93,12 @@ class DatasetSummarizer:
                     for e in exports
                 ],
             ]
+        for heading, body in extra_sections or []:
+            if isinstance(body, pd.DataFrame):
+                body = body.to_string(index=False)
+            elif isinstance(body, list):
+                body = "\n".join(body)
+            lines += ["", heading.upper(), "-" * 70, body]
         return "\n".join(lines) + "\n"
 
     def save(self, df: pd.DataFrame, path: str | Path = config.DATA_SUMMARY_TXT, **kwargs: Any) -> Path:
