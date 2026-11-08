@@ -1,0 +1,4 @@
+staff_availability_group,registros,estancia_dias_validos,estancia_dias_media,estancia_dias_mediana,estancia_dias_desv_est,estancia_dias_minimo,estancia_dias_maximo,deposito_admision_validos,deposito_admision_media,deposito_admision_mediana,deposito_admision_desv_est,deposito_admision_minimo,deposito_admision_maximo
+Bajo (0-3),180291,180291,12.26,9.0,7.74,3,51,180291,4722.89,4625.05,1048.7,1654.01,9872.65
+Medio (4-6),137125,137125,12.59,9.0,8.18,3,51,137125,4718.34,4626.81,1043.22,1690.92,9657.61
+Alto (7+),182584,182584,12.35,9.0,7.88,3,50,182584,4724.74,4628.78,1049.04,1725.69,10104.73
