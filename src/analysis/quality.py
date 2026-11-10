@@ -1,4 +1,4 @@
-"""Controles de calidad y comparación antes/después (AE3)."""
+"""Controles de calidad y comparación antes/después (EA3)."""
 from __future__ import annotations
 
 from typing import Any

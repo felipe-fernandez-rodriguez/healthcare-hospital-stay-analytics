@@ -26,32 +26,34 @@ healthcare-hospital-stay-analytics/
 ├── .github/workflows/ml-pipeline.yml   # GitHub Actions: pruebas + ejecución de notebooks
 ├── data/
 │   ├── raw/                            # CSV original (primeras 100.000 filas) – lo genera Actions
-│   └── processed/                      # CSV transformado (EA1, ~10 MB) y healthcare_enriched_sample.csv (AE3, ~22 MB); ≤ 100.000 filas, los genera Actions
-├── results/                            # AE3: tablas agregadas en CSV (dataset completo)
+│   └── processed/                      # CSV transformado (EA1, ~10 MB, ≤ 100.000 filas) – lo genera Actions
+├── EA3/                                # entregables de EA3 (ver EA3/README.md)
+│   ├── notebooks/03-data-transformation-enrichment.ipynb
+│   ├── data/healthcare_enriched_sample.csv   # muestra ≤ 100.000 filas
+│   ├── results/                        # 8 tablas agregadas (dataset completo)
+│   └── reports/data-enrichment-summary.txt
 ├── docs/
 │   └── proyecto_analisis_estancia_hospitalaria.docx       # documento del proyecto
 ├── notebooks/
 │   ├── 01-data-ingestion.ipynb         # EA1: carga, transformaciones, CSV y resumen
-│   ├── 02-data-description.ipynb       # EA2: exploración descriptiva + reporte
-│   └── 03-data-transformation-enrichment.ipynb  # AE3: transformación y enriquecimiento
+│   └── 02-data-description.ipynb       # EA2: exploración descriptiva + reporte
 ├── reports/
 │   ├── data-summary.txt               # resumen del DataFrame transformado COMPLETO (EA1)
-│   ├── exploratory-analysis.txt       # reporte del análisis exploratorio (EA2)
-│   └── data-enrichment-summary.txt    # resumen del DataFrame enriquecido COMPLETO (AE3)
+│   └── exploratory-analysis.txt       # reporte del análisis exploratorio (EA2)
 ├── src/
 │   ├── config.py                       # rutas relativas y constantes
 │   ├── pipeline.py                     # EA1 por script: python -m src.pipeline
 │   ├── data/
 │   │   ├── huggingface_loader.py       # HFDatasetLoader (solo carga)
 │   │   ├── transformations.py          # transformaciones reutilizables (EA1/EA2)
-│   │   ├── enrichment.py               # variables derivadas (AE3)
+│   │   ├── enrichment.py               # variables derivadas (EA3)
 │   │   └── dataset_io.py               # descarga + transformación + exportación limitada
 │   ├── analysis/
 │   │   ├── descriptive.py              # tablas descriptivas (notebooks 02 y 03)
-│   │   ├── quality.py                  # comparación antes/después y calidad (AE3)
-│   │   └── results.py                  # tablas de resultados, exportación y hallazgos (AE3)
+│   │   ├── quality.py                  # comparación antes/después y calidad (EA3)
+│   │   └── results.py                  # tablas de resultados, exportación y hallazgos (EA3)
 │   └── utils/reporter.py               # DatasetSummarizer y ExploratoryReport
-├── tests/                              # pruebas con pytest (test_pipeline.py: EA1/EA2; test_enrichment.py: AE3)
+├── tests/                              # pruebas con pytest (test_pipeline.py: EA1/EA2; test_enrichment.py: EA3)
 ├── .env.example · .gitignore · requirements.txt
 ```
 
@@ -76,7 +78,7 @@ healthcare-hospital-stay-analytics/
 El límite se aplica **solo a los CSV exportados** (primeras 100.000 filas, sin aleatoriedad) para no superar el peso permitido por GitHub (aviso a 50 MB, bloqueo a 100 MB). Los DataFrames, los resúmenes y la exploración usan las 500.000 filas. Los CSV **no representan el dataset completo**.
 
 - `data/raw/healthcare_raw.csv` (~9 MB) y `data/processed/healthcare_processed.csv` (~10 MB): se versionan; los genera el workflow (o el notebook 01 en local).
-- `data/processed/healthcare_enriched_sample.csv` (~22 MB, AE3) y `results/*.csv`: también se versionan (todos < 50 MB).
+- Los archivos de EA3 (`EA3/data/`, `EA3/results/`, `EA3/reports/`) también se versionan (todos < 50 MB).
 - `reports/*.txt` y los notebooks ejecutados también se versionan como evidencia.
 
 ## Instalación y ejecución
@@ -94,7 +96,7 @@ Ejecución en orden (desde la raíz; los notebooks localizan la raíz solos):
 ```bash
 jupyter nbconvert --to notebook --execute --inplace notebooks/01-data-ingestion.ipynb
 jupyter nbconvert --to notebook --execute --inplace notebooks/02-data-description.ipynb
-jupyter nbconvert --to notebook --execute --inplace notebooks/03-data-transformation-enrichment.ipynb   # AE3
+jupyter nbconvert --to notebook --execute --inplace EA3/notebooks/03-data-transformation-enrichment.ipynb   # EA3
 ```
 
 o ábralos con `jupyter lab`. Alternativa por script para EA1: `python -m src.pipeline`.
@@ -103,61 +105,22 @@ o ábralos con `jupyter lab`. Alternativa por script para EA1: `python -m src.pi
 
 **Documento Word:** `docs/proyecto_analisis_estancia_hospitalaria.docx`.
 
-## AE3 — Transformación y enriquecimiento de datos
+## EA3 — Transformación y enriquecimiento de datos
 
-**Objetivo.** Transformar y enriquecer el dataset completo de forma reproducible, responder las preguntas de negocio de EA2 con tablas calculadas sobre **todos** los registros y generar las evidencias (CSV de muestra, tablas y reporte TXT). Conserva todo lo de EA1 y EA2.
+Los entregables de EA3 están organizados en la carpeta **[`EA3/`](EA3/)** (documentación detallada en [`EA3/README.md`](EA3/README.md)):
 
-**Notebook:** `notebooks/03-data-transformation-enrichment.ipynb` (usa `HFDatasetLoader`, `transformations.apply_all` de EA1/EA2 y las funciones nuevas de `src/data/enrichment.py`). 
-
-> **Importante:** los cálculos y las tablas corresponden al **dataset completo** (500.000 filas × 15 columnas originales). Solo el CSV `data/processed/healthcare_enriched_sample.csv` se limita a **100.000 filas** (las primeras, en su orden original, sin azar). El resumen TXT y las tablas **no** se calculan con ese CSV.
-
-### Preguntas y tablas
-
-| Pregunta (EA2) | Tabla (`results/`) |
+| Entregable | Ruta |
 |---|---|
-| 1. Estancia y depósito por departamento | `results_by_department.csv` |
-| 2. Diferencias por severidad | `results_by_severity.csv` |
-| 3. Distribución según disponibilidad de personal (umbrales de EA2) | `results_by_staff_availability.csv` |
-| 4. Cruce departamento × severidad | `results_by_department_severity.csv` |
-| 5. Utilidad de los indicadores derivados | `results_by_stay_range.csv`, `results_by_complexity_score.csv`, `results_by_department_indicators.csv` |
-| Calidad de los datos | `results_data_quality.csv` |
+| Notebook | `EA3/notebooks/03-data-transformation-enrichment.ipynb` |
+| Muestra del dataset enriquecido (≤ 100.000 filas) | `EA3/data/healthcare_enriched_sample.csv` |
+| Tablas de resultados (8 CSV) | `EA3/results/` |
+| Reporte TXT del DataFrame enriquecido completo | `EA3/reports/data-enrichment-summary.txt` |
 
-Cada tabla incluye registros, valores válidos (tamaño de muestra de cada estadístico), media, mediana, desviación, mínimo y máximo de estancia (días) y depósito (unidad monetaria no documentada).
-
-### Transformaciones y variables derivadas
-
-Se reutilizan las 6 transformaciones de EA1/EA2 (espacios, tipos numéricos, duplicados exactos, `snake_case`, categorías ordenadas, `staff_availability_group` Bajo 0-3 / Medio 4-6 / Alto 7+). Los nulos no se imputan y `patientid` no se usa como variable cuantitativa. Variables nuevas (`src/data/enrichment.py`); si un indicador no se puede calcular queda **nulo**, nunca 0:
-
-| Variable | Fórmula / regla |
-|---|---|
-| `deposit_per_stay_day` | `admission_deposit / stay_in_days` (cociente descriptivo; no es costo diario) |
-| `visitors_per_day` | `visitors_with_patient / stay_in_days` (no mide carga asistencial) |
-| `stay_range` | Corta (1-3 días), Moderada (4-7), Prolongada (>7); umbrales del proyecto |
-| `clinical_complexity_score` | `severity_weight × admission_type_weight` (ver abajo) |
-| `dept_avg_stay`, `stay_vs_dept_avg` | media de estancia por departamento; diferencia respecto a ella |
-| `dept_severity_avg_deposit` | depósito medio por departamento × severidad |
-
-**Puntaje exploratorio de complejidad** (regla del proyecto, **no** una escala clínica validada): severidad Minor 1, Moderate 2, Extreme 3; tipo de admisión Elective 1,0, Urgent 1,25, Trauma 1,5. Las categorías reales de `type_of_admission` son `Trauma`, `Emergency` y `Urgent`: `Elective` no existe en los datos y `Emergency` no tiene peso definido, por lo que esos registros quedan **sin puntaje** (no se inventan equivalencias). El notebook y el reporte indican cuántos registros recibieron puntaje.
-
-### Archivos generados
-
-- `data/processed/healthcare_enriched_sample.csv` (≤ 100.000 filas).
-- `results/*.csv` (8 tablas).
-- `reports/data-enrichment-summary.txt`: reporte generado con `DatasetSummarizer` desde el DataFrame final completo.
-- `docs/proyecto_analisis_estancia_hospitalaria.docx`: documento actualizado con la etapa de transformación y enriquecimiento.
-
-### Ejecución y validaciones
+Reutiliza `HFDatasetLoader` y las transformaciones de EA1/EA2 y agrega `src/data/enrichment.py`. Los cálculos y las tablas corresponden al **dataset completo** (500.000 filas); solo el CSV de muestra se limita a 100.000 filas. Los archivos de EA1 y EA2 no se modifican. Ejecución:
 
 ```bash
-jupyter nbconvert --to notebook --execute --inplace notebooks/03-data-transformation-enrichment.ipynb
-python -m pytest -q tests          # 34 pruebas (sin Internet)
+jupyter nbconvert --to notebook --execute --inplace EA3/notebooks/03-data-transformation-enrichment.ipynb
 ```
-
-El notebook comprueba el número de filas, que el original no se altere, la coherencia de conteos y denominadores y que los CSV coincidan con las tablas.
-
-### Limitaciones de AE3
-
-Análisis descriptivo, sin causalidad ni juicios de eficiencia; indicadores exploratorios; umbrales y pesos definidos por el proyecto; ficha del dataset sin licencia, procedencia ni definiciones. La redistribución de copias derivadas del dataset no está verificada como autorizada (la ficha no documenta licencia): confirme las condiciones de uso antes de publicar los CSV.
 
 ## Pruebas y GitHub Actions
 
@@ -168,7 +131,7 @@ python -m pytest -q tests
 El workflow `.github/workflows/ml-pipeline.yml` se ejecuta en `push` a `main`, en `pull_request` y manualmente:
 
 1. **tests:** instala dependencias y ejecuta `pytest` (cargador, transformaciones, resumen, límite de exportación). No descarga el dataset.
-2. **notebooks:** ejecuta los tres notebooks (cada uno descarga el dataset una vez), verifica que existan los reportes, las tablas de `results/` y los CSV, que cada CSV tenga ≤ 100.000 filas y que ningún archivo supere 50 MB; publica reportes y CSV como artefacto y, **solo en `main`**, hace commit de los CSV, `results/`, los reportes y los notebooks ejecutados con `[skip ci]` (no se re-dispara). El secreto `HF_TOKEN` es opcional.
+2. **notebooks:** ejecuta los tres notebooks (cada uno descarga el dataset una vez), verifica que existan los reportes, las tablas de `EA3/results/` y los CSV, que cada CSV tenga ≤ 100.000 filas y que ningún archivo supere 50 MB; publica reportes y CSV como artefacto y, **solo en `main`**, hace commit de los CSV, `EA3/`, los reportes y los notebooks ejecutados con `[skip ci]` (no se re-dispara). El secreto `HF_TOKEN` es opcional.
 
 ## Limitaciones
 

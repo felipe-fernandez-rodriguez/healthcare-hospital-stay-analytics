@@ -58,30 +58,30 @@ jobs:
       - name: Notebook 02 - exploración descriptiva (EA2)
         run: |
           jupyter nbconvert --to notebook --execute --inplace             --ExecutePreprocessor.timeout=1800 notebooks/02-data-description.ipynb
-      - name: Notebook 03 - transformación y enriquecimiento (AE3)
+      - name: Notebook 03 - transformación y enriquecimiento (EA3)
         run: |
-          jupyter nbconvert --to notebook --execute --inplace             --ExecutePreprocessor.timeout=1800 notebooks/03-data-transformation-enrichment.ipynb
+          jupyter nbconvert --to notebook --execute --inplace             --ExecutePreprocessor.timeout=1800 EA3/notebooks/03-data-transformation-enrichment.ipynb
       - name: Verificar entregables y restricciones de exportación
         run: |
-          required="reports/data-summary.txt reports/exploratory-analysis.txt reports/data-enrichment-summary.txt
-            data/raw/healthcare_raw.csv data/processed/healthcare_processed.csv data/processed/healthcare_enriched_sample.csv
-            results/results_by_department.csv results/results_by_severity.csv results/results_by_staff_availability.csv
-            results/results_by_department_severity.csv results/results_by_stay_range.csv results/results_data_quality.csv
-            results/results_by_complexity_score.csv results/results_by_department_indicators.csv"
+          required="reports/data-summary.txt reports/exploratory-analysis.txt EA3/reports/data-enrichment-summary.txt
+            data/raw/healthcare_raw.csv data/processed/healthcare_processed.csv EA3/data/healthcare_enriched_sample.csv
+            EA3/results/results_by_department.csv EA3/results/results_by_severity.csv EA3/results/results_by_staff_availability.csv
+            EA3/results/results_by_department_severity.csv EA3/results/results_by_stay_range.csv EA3/results/results_data_quality.csv
+            EA3/results/results_by_complexity_score.csv EA3/results/results_by_department_indicators.csv"
           for f in $required; do
             test -s "$f" || { echo "::error::Falta o está vacío: $f"; exit 1; }
           done
-          for f in data/raw/healthcare_raw.csv data/processed/healthcare_processed.csv data/processed/healthcare_enriched_sample.csv; do
+          for f in data/raw/healthcare_raw.csv data/processed/healthcare_processed.csv EA3/data/healthcare_enriched_sample.csv; do
             rows=$(( $(wc -l < "$f") - 1 ))
             echo "$f: $rows filas"
             [ "$rows" -le 100000 ] || { echo "::error::$f supera 100000 filas"; exit 1; }
           done
-          big=$(find data results reports notebooks -type f -size +${MAX_FILE_MB}M)
+          big=$(find data EA3 reports notebooks -type f -size +${MAX_FILE_MB}M)
           [ -z "$big" ] || { echo "::error::Archivos que superan ${MAX_FILE_MB} MB: $big"; exit 1; }
           grep -q "Split: train" reports/data-summary.txt
           grep -q "Filas analizadas:" reports/exploratory-analysis.txt
-          grep -q "Filas: 500000" reports/data-enrichment-summary.txt || echo "::warning::El reporte AE3 no indica 500000 filas (revise si el dataset cambió)"
-          grep -q "clinical_complexity_score" reports/data-enrichment-summary.txt
+          grep -q "Filas: 500000" EA3/reports/data-enrichment-summary.txt || echo "::warning::El reporte EA3 no indica 500000 filas (revise si el dataset cambió)"
+          grep -q "clinical_complexity_score" EA3/reports/data-enrichment-summary.txt
       - name: Publicar reportes, resultados y CSV como artefacto
         uses: actions/upload-artifact@v7
         with:
@@ -89,18 +89,18 @@ jobs:
           path: |
             reports/data-summary.txt
             reports/exploratory-analysis.txt
-            reports/data-enrichment-summary.txt
-            results/*.csv
+            EA3/reports/data-enrichment-summary.txt
+            EA3/results/*.csv
             data/raw/healthcare_raw.csv
             data/processed/healthcare_processed.csv
-            data/processed/healthcare_enriched_sample.csv
+            EA3/data/healthcare_enriched_sample.csv
           if-no-files-found: error
       - name: Confirmar archivos generados en el repositorio (solo main)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f reports/*.txt results/*.csv data/raw/healthcare_raw.csv data/processed/*.csv notebooks/*.ipynb
+          git add -f reports/*.txt data/raw/healthcare_raw.csv data/processed/*.csv notebooks/*.ipynb EA3/data/*.csv EA3/results/*.csv EA3/reports/*.txt EA3/notebooks/*.ipynb
           if git diff --cached --quiet; then
             echo "No hay cambios que confirmar."; exit 0
           fi

@@ -1,6 +1,0 @@
-department,registros,deposito_por_dia_validos,deposito_por_dia_media,deposito_por_dia_mediana,deposito_por_dia_desv_est,deposito_por_dia_minimo,deposito_por_dia_maximo,visitas_por_dia_validos,visitas_por_dia_media,visitas_por_dia_mediana,visitas_por_dia_desv_est,visitas_por_dia_minimo,visitas_por_dia_maximo
-TB & Chest disease,22890,22890,281.34,213.56,161.31,67.15,1475.77,22890,0.25,0.17,0.29,0.0,4.57
-anesthesia,44179,44179,193.38,168.04,78.86,52.21,760.86,44179,0.15,0.11,0.16,0.0,2.46
-gynecology,343478,343478,552.79,528.87,146.34,176.11,2015.59,343478,0.41,0.38,0.22,0.0,2.6
-radiotherapy,84315,84315,447.43,253.97,321.97,70.59,1933.53,84315,0.35,0.2,0.38,0.0,6.4
-surgery,5138,5138,190.01,141.45,110.86,48.26,864.91,5138,0.14,0.1,0.14,0.02,2.29

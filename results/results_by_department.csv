@@ -1,6 +1,0 @@
-department,registros,estancia_dias_validos,estancia_dias_media,estancia_dias_mediana,estancia_dias_desv_est,estancia_dias_minimo,estancia_dias_maximo,deposito_admision_validos,deposito_admision_media,deposito_admision_mediana,deposito_admision_desv_est,deposito_admision_minimo,deposito_admision_maximo
-TB & Chest disease,22890,22890,21.14,24.0,8.57,4,41,22890,4798.82,4682.72,1070.73,1818.93,9473.51
-anesthesia,44179,44179,27.54,30.0,8.04,9,51,44179,4825.66,4702.52,1070.29,1715.8,10104.73
-gynecology,343478,343478,8.64,9.0,1.06,3,14,343478,4692.08,4599.54,1038.73,1654.01,9899.19
-radiotherapy,84315,84315,16.2,20.0,8.47,3,33,84315,4768.67,4675.91,1065.05,1889.78,9692.65
-surgery,5138,5138,30.74,35.0,11.24,8,51,5138,4753.7,4718.34,909.97,2171.49,9585.47

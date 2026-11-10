@@ -1,4 +1,4 @@
-"""Pruebas de AE3: enriquecimiento, tablas de resultados, calidad y reporte.
+"""Pruebas de EA3: enriquecimiento, tablas de resultados, calidad y reporte.
 
 Usan DataFrames pequeños con respuestas calculables a mano; no requieren Internet.
 """
@@ -208,13 +208,13 @@ def test_enriched_export_is_first_rows_and_capped(tmp_path):
 
 def test_summary_report_extra_sections_utf8(tmp_path):
     df = enriched()
-    out = DatasetSummarizer(title="RESUMEN AE3").save(
+    out = DatasetSummarizer(title="RESUMEN EA3").save(
         df, tmp_path / "rep" / "ae3.txt",
         dataset_info={"dataset_id": "a/b", "config": "default", "split": "train", "muestreo": "dataset completo"},
         extra_sections=[("Fórmulas", ["- deposit_per_stay_day: depósito / estancia"]), ("Tabla", pd.DataFrame({"a": [1]}))],
     )
     text = out.read_text(encoding="utf-8")
-    for expected in ["RESUMEN AE3", "Filas: 6", f"Columnas: {df.shape[1]}", "clinical_complexity_score", "FÓRMULAS", "deposit_per_stay_day: depósito"]:
+    for expected in ["RESUMEN EA3", "Filas: 6", f"Columnas: {df.shape[1]}", "clinical_complexity_score", "FÓRMULAS", "deposit_per_stay_day: depósito"]:
         assert expected in text
 
 

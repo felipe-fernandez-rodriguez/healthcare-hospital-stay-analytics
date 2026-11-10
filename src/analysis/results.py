@@ -1,4 +1,4 @@
-"""Tablas de resultados de AE3: construcción, exportación y hallazgos en texto.
+"""Tablas de resultados de EA3: construcción, exportación y hallazgos en texto.
 
 Todas las tablas se calculan con el DataFrame COMPLETO (nunca con el CSV de muestra).
 """

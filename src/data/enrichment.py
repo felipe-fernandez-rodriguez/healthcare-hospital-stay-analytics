@@ -1,4 +1,4 @@
-"""Enriquecimiento (AE3): variables derivadas sobre el DataFrame ya transformado.
+"""Enriquecimiento (EA3): variables derivadas sobre el DataFrame ya transformado.
 
 Sigue el mismo contrato que ``transformations.py``: cada paso es una función pura que
 devuelve ``(DataFrame, registro)``. Ningún paso elimina filas ni sustituye resultados

@@ -24,10 +24,11 @@ DATASET_SPLIT: str = "train"  # único split expuesto (verificado)
 # GitHub avisa a 50 MB y bloquea a 100 MB por archivo.
 CSV_MAX_ROWS: int = 100_000
 
-# ---- AE3: transformación y enriquecimiento ----
-RESULTS_DIR: Path = PROJECT_ROOT / "results"
-ENRICHED_CSV: Path = DATA_PROCESSED_DIR / "healthcare_enriched_sample.csv"  # máx. CSV_MAX_ROWS filas
-ENRICHMENT_SUMMARY_TXT: Path = REPORTS_DIR / "data-enrichment-summary.txt"
+# ---- EA3: transformación y enriquecimiento (todos los entregables viven en la carpeta EA3/) ----
+EA3_DIR: Path = PROJECT_ROOT / "EA3"
+RESULTS_DIR: Path = EA3_DIR / "results"
+ENRICHED_CSV: Path = EA3_DIR / "data" / "healthcare_enriched_sample.csv"  # máx. CSV_MAX_ROWS filas
+ENRICHMENT_SUMMARY_TXT: Path = EA3_DIR / "reports" / "data-enrichment-summary.txt"
 # Nombre de cada tabla de resultados -> archivo CSV (todas se calculan con el DataFrame COMPLETO).
 RESULT_FILES: dict[str, Path] = {
     "department": RESULTS_DIR / "results_by_department.csv",

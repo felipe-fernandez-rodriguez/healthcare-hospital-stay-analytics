@@ -40,7 +40,7 @@ class DatasetSummarizer:
         """Construye el texto del resumen (todo se calcula desde ``df``).
 
         ``extra_sections`` agrega secciones ``(título, contenido)`` al final (p. ej. fórmulas,
-        rutas de resultados y limitaciones de AE3), sin duplicar la lógica del resumen base.
+        rutas de resultados y limitaciones de EA3), sin duplicar la lógica del resumen base.
         """
         if not isinstance(df, pd.DataFrame):
             raise TypeError("Se esperaba un pandas.DataFrame.")
