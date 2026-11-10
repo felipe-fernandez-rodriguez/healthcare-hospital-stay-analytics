@@ -1,0 +1,4 @@
+severity_of_illness,registros,estancia_dias_validos,estancia_dias_media,estancia_dias_mediana,estancia_dias_desv_est,estancia_dias_minimo,estancia_dias_maximo,deposito_admision_validos,deposito_admision_media,deposito_admision_mediana,deposito_admision_desv_est,deposito_admision_minimo,deposito_admision_maximo
+Minor,131537,131537,11.45,9.0,6.97,3,51,131537,4749.1,4636.65,1058.42,1654.01,9813.47
+Moderate,280197,280197,12.72,9.0,8.18,3,51,280197,4718.71,4621.39,1049.48,1715.8,10104.73
+Extreme,88266,88266,12.69,9.0,8.25,3,50,88266,4693.85,4630.06,1022.66,1744.9,9897.66

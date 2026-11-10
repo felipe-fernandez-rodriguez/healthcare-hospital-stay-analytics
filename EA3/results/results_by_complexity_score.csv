@@ -1,0 +1,8 @@
+clinical_complexity_score,registros,estancia_dias_validos,estancia_dias_media,estancia_dias_mediana,estancia_dias_desv_est,estancia_dias_minimo,estancia_dias_maximo,deposito_admision_validos,deposito_admision_media,deposito_admision_mediana,deposito_admision_desv_est,deposito_admision_minimo,deposito_admision_maximo
+1.25,18187,18187,11.6,9.0,7.12,4,47,18187,4766.29,4614.8,1067.91,1654.01,9664.43
+1.5,71625,71625,11.62,9.0,7.15,4,50,71625,4745.83,4642.0,1049.59,1690.92,9813.47
+2.5,27140,27140,12.84,9.0,8.12,3,51,27140,4735.81,4585.89,1087.33,1789.17,9759.7
+3,172851,172851,13.06,9.0,8.51,3,50,172851,4747.52,4638.11,1056.56,1715.8,10104.73
+3.75,8353,8353,12.49,9.0,8.09,3,46,8353,4650.0,4553.2,1063.06,1971.5,9692.65
+4.5,66060,66060,12.75,9.0,8.31,3,50,66060,4695.42,4638.04,1010.02,1744.9,9897.66
+(sin dato),135784,135784,11.74,9.0,7.23,3,51,135784,4686.78,4613.78,1038.63,1710.21,9785.69
