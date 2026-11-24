@@ -43,7 +43,7 @@ healthcare-hospital-stay-analytics/
 │   ├── reports/ea4-summary.txt
 │   └── tests/test_dashboard_metrics.py
 ├── docs/
-│   └── proyecto_analisis_estancia_hospitalaria.docx       # documento del proyecto
+│   └── proyecto_analisis_estancia_hospitalaria.pdf        # documento del proyecto (PDF)
 ├── notebooks/
 │   ├── 01-data-ingestion.ipynb         # EA1: carga, transformaciones, CSV y resumen
 │   └── 02-data-description.ipynb       # EA2: exploración descriptiva + reporte
@@ -115,7 +115,7 @@ o ábralos con `jupyter lab`. Alternativa por script para EA1: `python -m src.pi
 
 **Token (opcional):** el dataset es público y el proyecto funciona sin él. Para evitar límites de uso anónimo copie `.env.example` a `.env` y complete `HF_TOKEN`, o defina la variable de entorno. `.env` está en `.gitignore`; nunca se imprime ni se sube.
 
-**Documento Word:** `docs/proyecto_analisis_estancia_hospitalaria.docx`.
+**Documento del proyecto (PDF):** `docs/proyecto_analisis_estancia_hospitalaria.pdf`.
 
 ## EA3 — Transformación y enriquecimiento de datos
 

@@ -65,7 +65,7 @@ Se reutilizan las 6 transformaciones de EA1/EA2 (espacios, tipos numéricos, dup
 - `EA3/data/healthcare_enriched_sample.csv` (≤ 100.000 filas, ~22 MB).
 - `EA3/results/*.csv` (8 tablas).
 - `EA3/reports/data-enrichment-summary.txt`: reporte generado con `DatasetSummarizer` desde el DataFrame final completo.
-- `docs/proyecto_analisis_estancia_hospitalaria.docx`: documento actualizado con la etapa de transformación y enriquecimiento.
+- `docs/proyecto_analisis_estancia_hospitalaria.pdf`: documento actualizado con la etapa de transformación y enriquecimiento.
 
 ## Ejecución y validaciones
 
