@@ -1,6 +1,6 @@
 RESUMEN EA3 - TRANSFORMACIÓN Y ENRIQUECIMIENTO DE DATOS (healthcare-hospital-stay-analytics)
 ======================================================================
-Fecha de generación: 2026-11-10 22:59:43 UTC+0000
+Fecha de generación: 2026-11-24 02:22:25 UTC+0000
 
 Dataset: Nicolybgs/healthcare_data
 Configuración: default

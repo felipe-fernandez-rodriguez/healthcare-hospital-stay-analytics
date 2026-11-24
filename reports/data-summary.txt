@@ -1,6 +1,6 @@
 RESUMEN DEL DATAFRAME
 ======================================================================
-Fecha de generación: 2026-11-10 22:59:03 UTC+0000
+Fecha de generación: 2026-11-24 02:21:55 UTC+0000
 
 Dataset: Nicolybgs/healthcare_data
 Configuración: default

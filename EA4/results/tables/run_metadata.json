@@ -1,0 +1,175 @@
+{
+  "dataset_id": "Nicolybgs/healthcare_data",
+  "dataset_url": "https://huggingface.co/datasets/Nicolybgs/healthcare_data",
+  "config": "default",
+  "split": "train",
+  "generado": "2026-11-24T02:22:40+00:00",
+  "filas_cargadas": 500000,
+  "columnas_originales": 15,
+  "filas_analizadas": 500000,
+  "columnas_enriquecidas": 25,
+  "muestra": {
+    "archivo": "EA4/data/processed/healthcare_enriched_sample.csv",
+    "filas_dataset_completo": 500000,
+    "filas_exportadas": 100000,
+    "metodo": "sistemática: una de cada 5 filas en el orden original (sin azar)",
+    "paso": 5,
+    "es_parcial": true,
+    "columnas": 25,
+    "tamano_mb": 21.77
+  },
+  "calidad": {
+    "duplicados_exactos": 0,
+    "errores_conversion": 0,
+    "patientid_negativos": 888,
+    "patientid_repetidos": 373601,
+    "categorias_sin_peso": {
+      "Emergency": 135784
+    },
+    "puntaje_calculado": 364216,
+    "sin_rango_estancia": 0,
+    "nulos_por_columna": {
+      "health_conditions": 151888,
+      "admission_type_weight": 135784,
+      "clinical_complexity_score": 135784
+    }
+  },
+  "tablas": [
+    {
+      "tabla": "department",
+      "archivo": "EA4/results/tables/results_by_department.csv",
+      "filas": 5,
+      "columnas": 14,
+      "tamano_kb": 0.7,
+      "origen": "EA3 (mismo código)"
+    },
+    {
+      "tabla": "severity",
+      "archivo": "EA4/results/tables/results_by_severity.csv",
+      "filas": 3,
+      "columnas": 14,
+      "tamano_kb": 0.6,
+      "origen": "EA3 (mismo código)"
+    },
+    {
+      "tabla": "staff_availability",
+      "archivo": "EA4/results/tables/results_by_staff_availability.csv",
+      "filas": 3,
+      "columnas": 14,
+      "tamano_kb": 0.6,
+      "origen": "EA3 (mismo código)"
+    },
+    {
+      "tabla": "department_severity",
+      "archivo": "EA4/results/tables/results_by_department_severity.csv",
+      "filas": 15,
+      "columnas": 15,
+      "tamano_kb": 1.7,
+      "origen": "EA3 (mismo código)"
+    },
+    {
+      "tabla": "stay_range",
+      "archivo": "EA4/results/tables/results_by_stay_range.csv",
+      "filas": 5,
+      "columnas": 4,
+      "tamano_kb": 0.2,
+      "origen": "EA3 (mismo código)"
+    },
+    {
+      "tabla": "complexity",
+      "archivo": "EA4/results/tables/results_by_complexity_score.csv",
+      "filas": 7,
+      "columnas": 14,
+      "tamano_kb": 0.9,
+      "origen": "EA3 (mismo código)"
+    },
+    {
+      "tabla": "indicators",
+      "archivo": "EA4/results/tables/results_by_department_indicators.csv",
+      "filas": 5,
+      "columnas": 14,
+      "tamano_kb": 0.7,
+      "origen": "EA3 (mismo código)"
+    },
+    {
+      "tabla": "data_quality",
+      "archivo": "EA4/results/tables/results_data_quality.csv",
+      "filas": 25,
+      "columnas": 7,
+      "tamano_kb": 1.9,
+      "origen": "EA3 (mismo código)"
+    },
+    {
+      "tabla": "patient_days",
+      "archivo": "EA4/results/tables/results_patient_days_by_department.csv",
+      "filas": 5,
+      "columnas": 9,
+      "tamano_kb": 0.7,
+      "origen": "EA4"
+    },
+    {
+      "tabla": "severity_composition",
+      "archivo": "EA4/results/tables/results_severity_expected_stay.csv",
+      "filas": 3,
+      "columnas": 8,
+      "tamano_kb": 0.4,
+      "origen": "EA4"
+    },
+    {
+      "tabla": "staff_level",
+      "archivo": "EA4/results/tables/results_by_staff_level.csv",
+      "filas": 11,
+      "columnas": 14,
+      "tamano_kb": 1.2,
+      "origen": "EA4"
+    },
+    {
+      "tabla": "correlations",
+      "archivo": "EA4/results/tables/results_spearman_correlations.csv",
+      "filas": 7,
+      "columnas": 5,
+      "tamano_kb": 0.9,
+      "origen": "EA4"
+    },
+    {
+      "tabla": "eta_squared",
+      "archivo": "EA4/results/tables/results_eta_squared.csv",
+      "filas": 20,
+      "columnas": 6,
+      "tamano_kb": 1.6,
+      "origen": "EA4"
+    },
+    {
+      "tabla": "distribution",
+      "archivo": "EA4/results/tables/results_distribution_summary.csv",
+      "filas": 5,
+      "columnas": 17,
+      "tamano_kb": 1.1,
+      "origen": "EA4"
+    },
+    {
+      "tabla": "histograms",
+      "archivo": "EA4/results/tables/results_histograms.csv",
+      "filas": 207,
+      "columnas": 5,
+      "tamano_kb": 11.8,
+      "origen": "EA4"
+    },
+    {
+      "tabla": "pc2_groups",
+      "archivo": "EA4/results/tables/results_pc2_group_metrics.csv",
+      "filas": 30,
+      "columnas": 15,
+      "tamano_kb": 3.1,
+      "origen": "EA4"
+    },
+    {
+      "tabla": "filter_cube",
+      "archivo": "EA4/results/tables/results_filter_cube.csv",
+      "filas": 3285,
+      "columnas": 9,
+      "tamano_kb": 257.2,
+      "origen": "EA4"
+    }
+  ]
+}

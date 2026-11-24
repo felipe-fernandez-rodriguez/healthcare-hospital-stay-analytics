@@ -1,0 +1,235 @@
+RESUMEN EA4 - MÉTRICAS Y VISUALIZACIÓN (healthcare-hospital-stay-analytics)
+======================================================================
+Fecha de generación: 2026-11-24 02:22:40 UTC+0000
+
+Dataset: Nicolybgs/healthcare_data
+Configuración: default
+Split: train
+Carga: dataset completo (sin muestreo)
+
+Filas: 500000
+Columnas: 25
+Filas duplicadas: 0
+
+Nombres de columnas:
+available_extra_rooms_in_hospital, department, ward_facility_code, doctor_name, staff_available, patientid, age, gender, type_of_admission, severity_of_illness, health_conditions, visitors_with_patient, insurance, admission_deposit, stay_in_days, staff_availability_group, deposit_per_stay_day, visitors_per_day, stay_range, severity_weight, admission_type_weight, clinical_complexity_score, dept_avg_stay, stay_vs_dept_avg, dept_severity_avg_deposit
+
+Tipos de datos:
+- available_extra_rooms_in_hospital: int64
+- department: category
+- ward_facility_code: category
+- doctor_name: category
+- staff_available: int64
+- patientid: int64
+- age: category
+- gender: category
+- type_of_admission: category
+- severity_of_illness: category
+- health_conditions: category
+- visitors_with_patient: int64
+- insurance: category
+- admission_deposit: float64
+- stay_in_days: int64
+- staff_availability_group: category
+- deposit_per_stay_day: float64
+- visitors_per_day: float64
+- stay_range: category
+- severity_weight: float64
+- admission_type_weight: float64
+- clinical_complexity_score: float64
+- dept_avg_stay: float64
+- stay_vs_dept_avg: float64
+- dept_severity_avg_deposit: float64
+
+Valores nulos por columna (cantidad y porcentaje):
+- available_extra_rooms_in_hospital: 0 (0.00 %)
+- department: 0 (0.00 %)
+- ward_facility_code: 0 (0.00 %)
+- doctor_name: 0 (0.00 %)
+- staff_available: 0 (0.00 %)
+- patientid: 0 (0.00 %)
+- age: 0 (0.00 %)
+- gender: 0 (0.00 %)
+- type_of_admission: 0 (0.00 %)
+- severity_of_illness: 0 (0.00 %)
+- health_conditions: 151888 (30.38 %)
+- visitors_with_patient: 0 (0.00 %)
+- insurance: 0 (0.00 %)
+- admission_deposit: 0 (0.00 %)
+- stay_in_days: 0 (0.00 %)
+- staff_availability_group: 0 (0.00 %)
+- deposit_per_stay_day: 0 (0.00 %)
+- visitors_per_day: 0 (0.00 %)
+- stay_range: 0 (0.00 %)
+- severity_weight: 0 (0.00 %)
+- admission_type_weight: 135784 (27.16 %)
+- clinical_complexity_score: 135784 (27.16 %)
+- dept_avg_stay: 0 (0.00 %)
+- stay_vs_dept_avg: 0 (0.00 %)
+- dept_severity_avg_deposit: 0 (0.00 %)
+
+Transformaciones aplicadas:
+- strip_text_values: Eliminación de espacios iniciales/finales en columnas de texto. Filas 500000 -> 500000; columnas 15 -> 15.
+- convert_numeric_types: Conversión validada a tipos numéricos (pd.to_numeric); valores no convertibles se reportan, no se eliminan. Filas 500000 -> 500000; columnas 15 -> 15.
+- drop_exact_duplicates: Eliminación de registros exactamente duplicados (todas las columnas iguales). Filas 500000 -> 500000; columnas 15 -> 15.
+- normalize_column_names: Normalización de nombres de columnas a snake_case. Filas 500000 -> 500000; columnas 15 -> 15.
+- standardize_categories: Espacios internos normalizados y columnas de texto convertidas a 'category' (severity_of_illness y age ordenadas); nulos conservados. Filas 500000 -> 500000; columnas 15 -> 15.
+- add_staff_availability_group: Nueva columna staff_availability_group (Bajo 0-3, Medio 4-6, Alto 7+); umbrales definidos por el proyecto, no por la ficha del dataset. Filas 500000 -> 500000; columnas 15 -> 16.
+- deposit_per_stay_day: admission_deposit / stay_in_days; nulo si la estancia es nula, 0 o negativa. No es el costo diario de hospitalización. Filas 500000 -> 500000; columnas 16 -> 17.
+- visitors_per_day: visitors_with_patient / stay_in_days; nulo si la estancia es nula, 0 o negativa. No mide carga asistencial. Filas 500000 -> 500000; columnas 17 -> 18.
+- stay_range: Segmentación de stay_in_days (umbrales del proyecto, no clínicos oficiales). Filas 500000 -> 500000; columnas 18 -> 19.
+- clinical_complexity_score: severity_weight (Minor 1, Moderate 2, Extreme 3) x admission_type_weight (Elective 1,0; Urgent 1,25; Trauma 1,5). Regla exploratoria del proyecto, no una escala clínica validada. Filas 500000 -> 500000; columnas 19 -> 22.
+- department_benchmark: dept_avg_stay = media de stay_in_days válida por departamento; stay_vs_dept_avg = stay_in_days - dept_avg_stay. Comparación relativa, no un juicio clínico ni de eficiencia. Filas 500000 -> 500000; columnas 22 -> 24.
+- dept_severity_avg_deposit: Media de admission_deposit por (department, severity_of_illness) calculada con los depósitos disponibles (los nulos se omiten del promedio, no de las filas). Filas 500000 -> 500000; columnas 24 -> 25.
+
+Estadísticas descriptivas (columnas numéricas):
+                                      count       mean        std       min        25%        50%         75%         max
+available_extra_rooms_in_hospital  500000.0      3.639      2.698     0.000      2.000      3.000       4.000      24.000
+staff_available                    500000.0      5.020      3.158     0.000      2.000      5.000       8.000      10.000
+patientid                          500000.0  63150.519  41689.480 -3269.000  25442.000  57864.000  103392.000  134400.000
+visitors_with_patient              500000.0      3.549      2.241     0.000      2.000      3.000       4.000      32.000
+admission_deposit                  500000.0   4722.316   1047.324  1654.005   4071.715   4627.004    5091.613   10104.726
+stay_in_days                       500000.0     12.381      7.913     3.000      8.000      9.000      11.000      51.000
+deposit_per_stay_day               500000.0    487.113    218.534    48.255    342.467    493.040     604.395    2015.593
+visitors_per_day                   500000.0      0.366      0.267     0.000      0.200      0.300       0.444       6.400
+severity_weight                    500000.0      1.913      0.657     1.000      1.000      2.000       2.000       3.000
+admission_type_weight              364216.0      1.463      0.089     1.250      1.500      1.500       1.500       1.500
+clinical_complexity_score          364216.0      2.870      1.009     1.250      2.500      3.000       3.000       4.500
+dept_avg_stay                      500000.0     12.381      6.274     8.636      8.636      8.636      16.198      30.736
+stay_vs_dept_avg                   500000.0      0.000      4.822   -22.736     -0.636      0.364       1.364      23.462
+dept_severity_avg_deposit          500000.0   4722.316     54.236  4647.285   4685.125   4728.218    4755.138    4852.199
+
+Variables categóricas (categorías únicas y más frecuente):
+- department: 5 categorías; más frecuente: gynecology (343478)
+- ward_facility_code: 6 categorías; más frecuente: F (120538)
+- doctor_name: 9 categorías; más frecuente: Dr Sarah (99596)
+- age: 10 categorías; más frecuente: 21-30 (159793)
+- gender: 3 categorías; más frecuente: Female (370810)
+- type_of_admission: 3 categorías; más frecuente: Trauma (310536)
+- severity_of_illness: 3 categorías; más frecuente: Moderate (280197)
+- health_conditions: 5 categorías; más frecuente: Other (94411)
+- insurance: 2 categorías; más frecuente: Yes (392960)
+- staff_availability_group: 3 categorías; más frecuente: Alto (7+) (182584)
+- stay_range: 3 categorías; más frecuente: Prolongada (>7 días) (425048)
+
+Exportaciones CSV (el resumen corresponde al DataFrame completo, NO a los CSV):
+- EA4/data/processed/healthcare_enriched_sample.csv: 100000 de 500000 filas (parcial: primeras filas), 21.77 MB
+
+PROYECTO Y ACTIVIDAD
+----------------------------------------------------------------------
+Proyecto: Análisis Descriptivo de la Estancia Hospitalaria y Factores Operativos en Admisiones Médicas.
+Actividad: EA4 - Métricas y visualización de datos con Streamlit. Escenario institucional HIPOTÉTICO.
+Registros cargados: 500000 | analizados (DataFrame enriquecido completo): 500000 | columnas: 15 -> 25
+
+INDICADORES Y FÓRMULAS
+----------------------------------------------------------------------
+- Días-paciente = suma de estancias válidas del grupo; participación = días-paciente del grupo / total x 100.
+- Estancia esperada por composición = suma_d (registros del departamento d en la categoría x estancia media de d) / registros de la categoría.
+- Razón de varianza eta2 = suma_g n_g (media_g - media)^2 / suma_i (y_i - media)^2 (registros con valor válido; nulos del factor como grupo propio).
+- Spearman: Pearson sobre rangos promedio, pares válidos. Atípicos: fuera de [Q1 - 1,5 RIC; Q3 + 1,5 RIC] (se conservan).
+- deposit_per_stay_day: admission_deposit / stay_in_days; nulo si la estancia es nula, 0 o negativa. No es el costo diario de hospitalización.
+- visitors_per_day: visitors_with_patient / stay_in_days; nulo si la estancia es nula, 0 o negativa. No mide carga asistencial.
+- stay_range: Segmentación de stay_in_days (umbrales del proyecto, no clínicos oficiales).
+- clinical_complexity_score: severity_weight (Minor 1, Moderate 2, Extreme 3) x admission_type_weight (Elective 1,0; Urgent 1,25; Trauma 1,5). Regla exploratoria del proyecto, no una escala clínica validada.
+- department_benchmark: dept_avg_stay = media de stay_in_days válida por departamento; stay_vs_dept_avg = stay_in_days - dept_avg_stay. Comparación relativa, no un juicio clínico ni de eficiencia.
+- dept_severity_avg_deposit: Media de admission_deposit por (department, severity_of_illness) calculada con los depósitos disponibles (los nulos se omiten del promedio, no de las filas).
+
+REGISTROS VÁLIDOS POR INDICADOR
+----------------------------------------------------------------------
+- deposit_per_stay_day: 500000 calculados (100.0 %), 0 no calculables
+- visitors_per_day: 500000 calculados (100.0 %), 0 no calculables
+- stay_range: 500000 calculados (100.0 %), 0 no calculables
+- clinical_complexity_score: 364216 calculados (72.84 %), 135784 no calculables
+- department_benchmark: 500000 calculados (100.0 %), 0 no calculables
+- dept_severity_avg_deposit: 500000 calculados (100.0 %), 0 no calculables
+
+RESUMEN DE MÉTRICAS (RESPUESTAS A LAS PREGUNTAS)
+----------------------------------------------------------------------
+- P1: La estancia mediana va de 9 días en gynecology (n = 343.478) a 35 días en surgery (n = 5.138). gynecology concentra 68,7 % de las admisiones y 47,9 % de los días-paciente. El depósito medio varía 2,8 % entre departamentos, frente a 106,0 % de la estancia media. La estancia mediana del departamento con mayor estancia es 3,9 veces la del de menor estancia; el depósito medio cambia mucho menos que la estancia.
+- P2: Estancia media: Minor 11,45 días (n = 131.537); Moderate 12,72 días (n = 280.197); Extreme 12,69 días (n = 88.266). La mediana es 9 días en todas las categorías. Depósito medio de 4.693,85 a 4.749,10. Entre severidades la estancia media difiere como máximo 1,26 días; al descontar la mezcla de departamentos, la diferencia máxima entre estancia observada y esperada es de 0,14 días.
+- P3: La estancia media va de 12,26 días a 12,59 días entre grupos y el depósito medio varía 0,14 %. En el dataset completo, ρ de Spearman con la estancia = 0,005 y con el depósito = 0,001 (n = 500.000 pares válidos). Diferencia máxima de estancia media entre grupos: 0,33 días; asociación monótona despreciable (|ρ| < 0,1).
+- P4: Dentro de un departamento, la estancia media cambia como máximo 1,27 días entre severidades; dentro de una misma severidad, la diferencia entre departamentos llega a 22,42 días. La celda más pequeña es surgery × Minor con 508 registros. Las diferencias entre departamentos superan a las de severidad dentro de cada departamento.
+- P5: Rangos: Corta (1-3 días) 0,00 % (n = 18); Moderada (4-7 días) 14,99 % (n = 74.934); Prolongada (>7 días) 85,01 % (n = 425.048). El puntaje se calculó para 364.216 de 500.000 registros (72,84 %); su estancia media va de 11,60 días a 13,06 días. La mediana del depósito por día va de 141,45 (surgery) a 528,87 (gynecology). «Prolongada (>7 días)» concentra 85,0 % de los registros, por lo que con estos umbrales la segmentación discrimina poco; la estancia media no sigue un orden monótono con el puntaje de complejidad. El depósito por día refleja sobre todo la duración de la estancia.
+- PC1: Estancia: media 12,38 días, mediana 9 días, desviación 7,91 días; 22,3 % de valores fuera de las vallas de Tukey. Depósito: media 4.722,32, mediana 4.627,00; 8,3 % de atípicos. La distribución de la estancia es asimétrica a la derecha (media mayor que la mediana); el rango intercuartílico del depósito es 1.019,90.
+- PC2: Factores con mayor η² para la estancia: age 65,7 %; department 62,9 %; ward_facility_code 50,0 %; gender 37,4 %. Para el depósito, el máximo es ward_facility_code con 1,20 %. La correlación de mayor magnitud es visitors_with_patient – admission_deposit (ρ = -0,151). age es el factor con mayor η² para la estancia (65,7 %); para el depósito ningún factor supera 1,20 %. Los η² de factores distintos pueden solaparse porque los factores están relacionados entre sí.
+- PC3: Variables con nulos: health_conditions 30,38 %; admission_type_weight 27,16 %; clinical_complexity_score 27,16 %. Variables completas: 22 de 25. 3 variables tienen nulos; los nulos se conservan y no se imputan, y los indicadores que no pueden calcularse quedan vacíos en lugar de cero.
+
+TABLAS GENERADAS (DATASET COMPLETO)
+----------------------------------------------------------------------
+                                                  archivo  filas  tamano_kb             origen
+             EA4/results/tables/results_by_department.csv      5        0.7 EA3 (mismo código)
+               EA4/results/tables/results_by_severity.csv      3        0.6 EA3 (mismo código)
+     EA4/results/tables/results_by_staff_availability.csv      3        0.6 EA3 (mismo código)
+    EA4/results/tables/results_by_department_severity.csv     15        1.7 EA3 (mismo código)
+             EA4/results/tables/results_by_stay_range.csv      5        0.2 EA3 (mismo código)
+       EA4/results/tables/results_by_complexity_score.csv      7        0.9 EA3 (mismo código)
+  EA4/results/tables/results_by_department_indicators.csv      5        0.7 EA3 (mismo código)
+              EA4/results/tables/results_data_quality.csv     25        1.9 EA3 (mismo código)
+EA4/results/tables/results_patient_days_by_department.csv      5        0.7                EA4
+    EA4/results/tables/results_severity_expected_stay.csv      3        0.4                EA4
+            EA4/results/tables/results_by_staff_level.csv     11        1.2                EA4
+     EA4/results/tables/results_spearman_correlations.csv      7        0.9                EA4
+               EA4/results/tables/results_eta_squared.csv     20        1.6                EA4
+      EA4/results/tables/results_distribution_summary.csv      5        1.1                EA4
+                EA4/results/tables/results_histograms.csv    207       11.8                EA4
+         EA4/results/tables/results_pc2_group_metrics.csv     30        3.1                EA4
+               EA4/results/tables/results_filter_cube.csv   3285      257.2                EA4
+
+MUESTRA EXPORTADA
+----------------------------------------------------------------------
+EA4/data/processed/healthcare_enriched_sample.csv: 100000 de 500000 filas; sistemática: una de cada 5 filas en el orden original (sin azar); 21.77 MB.
+Solo se usa en la app para vistas de registros individuales, siempre rotuladas como muestra.
+
+VALIDACIONES REALIZADAS
+----------------------------------------------------------------------
+- department: los conteos suman los 500,000 registros
+- severity: los conteos suman los 500,000 registros
+- staff_availability: los conteos suman los 500,000 registros
+- department_severity: los conteos suman los 500,000 registros
+- complexity: los conteos suman los 500,000 registros
+- indicators: los conteos suman los 500,000 registros
+- staff_level: los conteos suman los 500,000 registros
+- rangos de estancia: categorías + sin clasificar = total
+- días-paciente: suma = suma de estancias válidas
+- participaciones de días-paciente suman 100 %
+- participaciones de admisiones suman 100 %
+- Spearman: pares válidos = registros con ambos valores
+- η² entre 0 y 1
+- histogramas: cada variable suma los registros válidos
+- cubo: suma de registros = N
+- cubo = tabla oficial · department · estancia_dias_media
+- cubo = tabla oficial · department · estancia_dias_mediana
+- cubo = tabla oficial · department · estancia_dias_desv_est
+- cubo = tabla oficial · department · deposito_admision_media
+- cubo = tabla oficial · department · deposito_admision_desv_est
+- cubo = tabla oficial · severity_of_illness · estancia_dias_media
+- cubo = tabla oficial · severity_of_illness · estancia_dias_mediana
+- cubo = tabla oficial · severity_of_illness · estancia_dias_desv_est
+- cubo = tabla oficial · severity_of_illness · deposito_admision_media
+- cubo = tabla oficial · severity_of_illness · deposito_admision_desv_est
+- cubo = tabla oficial · staff_availability_group · estancia_dias_media
+- cubo = tabla oficial · staff_availability_group · estancia_dias_mediana
+- cubo = tabla oficial · staff_availability_group · estancia_dias_desv_est
+- cubo = tabla oficial · staff_availability_group · deposito_admision_media
+- cubo = tabla oficial · staff_availability_group · deposito_admision_desv_est
+- cubo = registros · estancia esperada por composición
+- cubo filtrado = registros filtrados (n, mediana y depósito medio)
+- los CSV exportados coinciden exactamente con las tablas en memoria
+- el DataFrame original no fue modificado
+- coherencia con EA3: department coincide con EA3
+- coherencia con EA3: severity coincide con EA3
+- coherencia con EA3: staff_availability coincide con EA3
+- coherencia con EA3: department_severity coincide con EA3
+- coherencia con EA3: stay_range coincide con EA3
+- coherencia con EA3: complexity coincide con EA3
+- coherencia con EA3: indicators coincide con EA3
+- coherencia con EA3: data_quality coincide con EA3
+
+LIMITACIONES
+----------------------------------------------------------------------
+- Análisis descriptivo: las diferencias entre grupos no implican causalidad ni eficiencia clínica.
+- La ficha del dataset no documenta licencia, procedencia, carácter real/sintético, periodo ni definiciones de columnas.
+- admission_deposit es el depósito registrado (unidad no documentada); no es ingreso, beneficio ni costo total.
+- staff_available no está documentado y no es una medida validada de capacidad asistencial.
+- clinical_complexity_score es exploratorio y no se calcula para Emergency; los umbrales de personal y estancia son reglas del proyecto.
+- No hay fechas ni camas por servicio: no se calculan ocupación ni giro de cama.
