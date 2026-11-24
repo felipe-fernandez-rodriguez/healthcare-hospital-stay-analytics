@@ -22,7 +22,7 @@ jobs:
   tests:
     name: Pruebas unitarias
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -32,14 +32,16 @@ jobs:
           cache-dependency-path: requirements.txt
       - name: Instalar dependencias
         run: python -m pip install -r requirements.txt
-      - name: Ejecutar pytest (cargador, transformaciones, reportes, límite de CSV)
-        run: python -m pytest -q tests
+      # tests/ (EA1-EA3) y EA4/tests: no descargan el dataset. Las pruebas de integración de EA4
+      # usan los archivos versionados si existen y se omiten si todavía no se han generado.
+      - name: Ejecutar pytest (EA1-EA4)
+        run: python -m pytest -q -rs
 
   notebooks:
     name: Ejecutar notebooks con el dataset completo
     needs: tests
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -51,37 +53,64 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
           python -m ipykernel install --user --name python3
-      # Los tres notebooks descargan el dataset completo (la caché de Hugging Face se reutiliza en el mismo job).
+      # Cada notebook descarga el dataset completo; la caché de Hugging Face se reutiliza dentro del job.
+      # Los notebooks localizan la raíz del repositorio solos, así que las rutas relativas funcionan desde cualquier carpeta.
       - name: Notebook 01 - ingestión y transformación (EA1)
         run: |
-          jupyter nbconvert --to notebook --execute --inplace             --ExecutePreprocessor.timeout=1800 notebooks/01-data-ingestion.ipynb
+          jupyter nbconvert --to notebook --execute --inplace \
+            --ExecutePreprocessor.timeout=1800 notebooks/01-data-ingestion.ipynb
       - name: Notebook 02 - exploración descriptiva (EA2)
         run: |
-          jupyter nbconvert --to notebook --execute --inplace             --ExecutePreprocessor.timeout=1800 notebooks/02-data-description.ipynb
+          jupyter nbconvert --to notebook --execute --inplace \
+            --ExecutePreprocessor.timeout=1800 notebooks/02-data-description.ipynb
       - name: Notebook 03 - transformación y enriquecimiento (EA3)
         run: |
-          jupyter nbconvert --to notebook --execute --inplace             --ExecutePreprocessor.timeout=1800 EA3/notebooks/03-data-transformation-enrichment.ipynb
+          jupyter nbconvert --to notebook --execute --inplace \
+            --ExecutePreprocessor.timeout=1800 EA3/notebooks/03-data-transformation-enrichment.ipynb
+      - name: Notebook 04 - métricas y datos del dashboard (EA4)
+        run: |
+          jupyter nbconvert --to notebook --execute --inplace \
+            --ExecutePreprocessor.timeout=2400 EA4/notebooks/04-data-streamlit.ipynb
       - name: Verificar entregables y restricciones de exportación
         run: |
           required="reports/data-summary.txt reports/exploratory-analysis.txt EA3/reports/data-enrichment-summary.txt
             data/raw/healthcare_raw.csv data/processed/healthcare_processed.csv EA3/data/healthcare_enriched_sample.csv
             EA3/results/results_by_department.csv EA3/results/results_by_severity.csv EA3/results/results_by_staff_availability.csv
             EA3/results/results_by_department_severity.csv EA3/results/results_by_stay_range.csv EA3/results/results_data_quality.csv
-            EA3/results/results_by_complexity_score.csv EA3/results/results_by_department_indicators.csv"
+            EA3/results/results_by_complexity_score.csv EA3/results/results_by_department_indicators.csv
+            EA4/reports/ea4-summary.txt EA4/data/processed/healthcare_enriched_sample.csv EA4/results/tables/run_metadata.json
+            EA4/results/tables/results_by_department.csv EA4/results/tables/results_by_severity.csv
+            EA4/results/tables/results_by_staff_availability.csv EA4/results/tables/results_by_department_severity.csv
+            EA4/results/tables/results_by_stay_range.csv EA4/results/tables/results_by_complexity_score.csv
+            EA4/results/tables/results_by_department_indicators.csv EA4/results/tables/results_data_quality.csv
+            EA4/results/tables/results_patient_days_by_department.csv EA4/results/tables/results_severity_expected_stay.csv
+            EA4/results/tables/results_by_staff_level.csv EA4/results/tables/results_spearman_correlations.csv
+            EA4/results/tables/results_eta_squared.csv EA4/results/tables/results_distribution_summary.csv
+            EA4/results/tables/results_histograms.csv EA4/results/tables/results_pc2_group_metrics.csv
+            EA4/results/tables/results_filter_cube.csv"
           for f in $required; do
             test -s "$f" || { echo "::error::Falta o está vacío: $f"; exit 1; }
           done
-          for f in data/raw/healthcare_raw.csv data/processed/healthcare_processed.csv EA3/data/healthcare_enriched_sample.csv; do
+          for f in data/raw/healthcare_raw.csv data/processed/healthcare_processed.csv EA3/data/healthcare_enriched_sample.csv \
+                   EA4/data/processed/healthcare_enriched_sample.csv; do
             rows=$(( $(wc -l < "$f") - 1 ))
             echo "$f: $rows filas"
             [ "$rows" -le 100000 ] || { echo "::error::$f supera 100000 filas"; exit 1; }
           done
-          big=$(find data EA3 reports notebooks -type f -size +${MAX_FILE_MB}M)
+          big=$(find data EA3 EA4 reports notebooks -type f -size +${MAX_FILE_MB}M)
           [ -z "$big" ] || { echo "::error::Archivos que superan ${MAX_FILE_MB} MB: $big"; exit 1; }
+          du -sh EA4/data EA4/results EA4/reports
           grep -q "Split: train" reports/data-summary.txt
           grep -q "Filas analizadas:" reports/exploratory-analysis.txt
           grep -q "Filas: 500000" EA3/reports/data-enrichment-summary.txt || echo "::warning::El reporte EA3 no indica 500000 filas (revise si el dataset cambió)"
           grep -q "clinical_complexity_score" EA3/reports/data-enrichment-summary.txt
+          grep -q "VALIDACIONES REALIZADAS" EA4/reports/ea4-summary.txt
+      # Comprobación técnica de la app con los archivos recién generados: imports, carga de datos,
+      # recorrido de las diez secciones con AppTest y coherencia notebook/app (no es una validación visual).
+      - name: Comprobar la app de Streamlit (EA4)
+        run: |
+          python -m pytest -q -rs EA4/tests
+          python -c "import sys; sys.path.insert(0, '.'); from EA4.src.visualization.dashboard_streamlit import HospitalDashboard as H; d = H.from_files(); print('Registros en la app:', d.total_records)"
       - name: Publicar reportes, resultados y CSV como artefacto
         uses: actions/upload-artifact@v7
         with:
@@ -94,13 +123,18 @@ jobs:
             data/raw/healthcare_raw.csv
             data/processed/healthcare_processed.csv
             EA3/data/healthcare_enriched_sample.csv
+            EA4/reports/ea4-summary.txt
+            EA4/results/tables/*
+            EA4/data/processed/healthcare_enriched_sample.csv
           if-no-files-found: error
       - name: Confirmar archivos generados en el repositorio (solo main)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -f reports/*.txt data/raw/healthcare_raw.csv data/processed/*.csv notebooks/*.ipynb EA3/data/*.csv EA3/results/*.csv EA3/reports/*.txt EA3/notebooks/*.ipynb
+          git add -f reports/*.txt data/raw/healthcare_raw.csv data/processed/*.csv notebooks/*.ipynb \
+            EA3/data/*.csv EA3/results/*.csv EA3/reports/*.txt EA3/notebooks/*.ipynb \
+            EA4/data/processed/*.csv EA4/results/tables/* EA4/reports/*.txt EA4/notebooks/*.ipynb
           if git diff --cached --quiet; then
             echo "No hay cambios que confirmar."; exit 0
           fi

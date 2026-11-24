@@ -1,0 +1,6 @@
+# Dependencias livianas de la app (Streamlit Community Cloud busca primero este archivo,
+# junto a EA4/app.py). La app solo lee CSV ya generados: no necesita datasets ni Jupyter.
+streamlit>=1.50
+plotly>=5.24
+pandas>=2.2,<3
+numpy>=1.26

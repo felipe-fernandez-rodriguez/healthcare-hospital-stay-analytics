@@ -13,3 +13,9 @@ nbformat>=5.10
 nbclient>=0.10
 # Pruebas
 pytest>=8.0
+# Dashboard EA4 (EA4/requirements.txt tiene solo lo que necesita la app para desplegarse)
+streamlit>=1.50
+plotly>=5.24
+# Opcional: imágenes estáticas de Plotly en el notebook 04 (visibles en GitHub); requiere Chrome.
+# Si no está disponible, el notebook muestra la figura interactiva y no falla.
+kaleido>=1.0
