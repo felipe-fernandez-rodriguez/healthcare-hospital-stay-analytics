@@ -1,5 +1,7 @@
 # EA4 — Métricas y visualización de datos con Streamlit
 
+**App publicada:** <https://healthcare-hospital-stay-analytics.streamlit.app/>
+
 Entregables de la actividad EA4 del proyecto *Análisis descriptivo de la estancia hospitalaria y factores operativos en admisiones médicas*. La documentación completa (preguntas, fórmulas, fuentes de datos, pruebas, workflow y despliegue) está en la sección **EA4** del [README general](../README.md#ea4--métricas-y-visualización-de-datos-con-streamlit).
 
 ```text

@@ -1,8 +1,24 @@
 # Análisis descriptivo de la estancia hospitalaria y factores operativos en admisiones médicas
 
-Proyecto académico (EA1 – carga y creación de dataset; EA2 – ideación, diseño y documentación de la necesidad; EA3 – transformación y enriquecimiento; EA4 – métricas y visualización con Streamlit). Carga el dataset [`Nicolybgs/healthcare_data`](https://huggingface.co/datasets/Nicolybgs/healthcare_data) desde Hugging Face, lo transforma, genera reportes `.txt` y realiza una exploración descriptiva.
+Proyecto académico (EA1 – carga y creación de dataset; EA2 – ideación, diseño y documentación de la necesidad; EA3 – transformación y enriquecimiento; EA4 – métricas y visualización con Streamlit). Carga el dataset [`Nicolybgs/healthcare_data`](https://huggingface.co/datasets/Nicolybgs/healthcare_data) desde Hugging Face, lo transforma y enriquece, genera reportes `.txt` y tablas de resultados, y presenta las métricas en un dashboard de Streamlit.
+
+- **Dashboard en línea (Streamlit Community Cloud):** <https://healthcare-hospital-stay-analytics.streamlit.app/>
+- **Documento del proyecto (PDF):** [`docs/proyecto_analisis_estancia_hospitalaria.pdf`](docs/proyecto_analisis_estancia_hospitalaria.pdf)
 
 **Autor:** Felipe Fernández Rodriguez · Institución Universitaria Digital de Antioquia · Analítica de Datos.
+
+## Estado actual del proyecto
+
+| Actividad | Entregables | Estado |
+|---|---|---|
+| EA1 · Carga y creación del dataset | `notebooks/01-data-ingestion.ipynb`, `src/data/huggingface_loader.py`, `src/utils/reporter.py`, `reports/data-summary.txt`, `data/` | Completa |
+| EA2 · Ideación, diseño y necesidad | `notebooks/02-data-description.ipynb`, `reports/exploratory-analysis.txt`, documento del proyecto | Completa |
+| EA3 · Transformación y enriquecimiento | carpeta [`EA3/`](EA3/) (notebook 03, 8 tablas, muestra y reporte) | Completa |
+| EA4 · Métricas y visualización | carpeta [`EA4/`](EA4/) (notebook 04, 17 tablas, muestra, reporte y app) | Completa; app publicada en <https://healthcare-hospital-stay-analytics.streamlit.app/> |
+
+- **Documento del proyecto:** se entrega en PDF (`docs/proyecto_analisis_estancia_hospitalaria.pdf`); reemplaza la versión en Word (`.docx`), que ya no se versiona.
+- **Archivos de datos y resultados:** no se editan a mano; los regenera GitHub Actions en cada `push` a `main` (commit automático `chore: actualizar CSV, resultados, reportes y notebooks ejecutados [skip ci]`). Después de un `push`, ejecute `git pull` para traerlos.
+- **Pruebas:** 62 pruebas automatizadas (`python -m pytest -q`): 34 de EA1-EA3 y 28 de EA4.
 
 ## Necesidad analítica y pregunta (escenario hipotético)
 
@@ -71,6 +87,8 @@ healthcare-hospital-stay-analytics/
 
 1. **Notebook 01** – `HFDatasetLoader` descarga el dataset **completo** → DataFrame original → 6 transformaciones (`src/data/transformations.py`) → DataFrame transformado → `DatasetSummarizer` escribe `reports/data-summary.txt` y se exportan los CSV.
 2. **Notebook 02** – **vuelve a descargar** el dataset completo, lo transforma en memoria con las mismas funciones y explora estancia/depósito por departamento, severidad y personal; genera `reports/exploratory-analysis.txt`. **No lee los CSV de `data/`.**
+3. **Notebook 03 (EA3)** – reutiliza la carga y las transformaciones, añade nueve variables derivadas (`src/data/enrichment.py`) y exporta tablas de resultados, una muestra y `EA3/reports/data-enrichment-summary.txt`.
+4. **Notebook 04 (EA4)** – reutiliza la carga, las transformaciones y el enriquecimiento de EA3, calcula las métricas del dashboard con el dataset completo y exporta las tablas que lee la app (`EA4/app.py`).
 
 ### Transformaciones (registran filas antes/después)
 
@@ -85,10 +103,10 @@ healthcare-hospital-stay-analytics/
 
 ### Límite de 100.000 filas
 
-El límite se aplica **solo a los CSV exportados** (primeras 100.000 filas, sin aleatoriedad) para no superar el peso permitido por GitHub (aviso a 50 MB, bloqueo a 100 MB). Los DataFrames, los resúmenes y la exploración usan las 500.000 filas. Los CSV **no representan el dataset completo**.
+El límite se aplica **solo a los CSV exportados** (EA1-EA3: primeras 100.000 filas; EA4: muestra sistemática de una de cada 5 filas; ambas sin aleatoriedad) para no superar el peso permitido por GitHub (aviso a 50 MB, bloqueo a 100 MB). Los DataFrames, los resúmenes y la exploración usan las 500.000 filas. Los CSV **no representan el dataset completo**.
 
 - `data/raw/healthcare_raw.csv` (~9 MB) y `data/processed/healthcare_processed.csv` (~10 MB): se versionan; los genera el workflow (o el notebook 01 en local).
-- Los archivos de EA3 (`EA3/data/`, `EA3/results/`, `EA3/reports/`) también se versionan (todos < 50 MB).
+- Los archivos de EA3 (`EA3/data/`, `EA3/results/`, `EA3/reports/`) y de EA4 (`EA4/data/`, `EA4/results/`, `EA4/reports/`) también se versionan (todos < 50 MB).
 - `reports/*.txt` y los notebooks ejecutados también se versionan como evidencia.
 
 ## Instalación y ejecución
@@ -111,11 +129,13 @@ jupyter nbconvert --to notebook --execute --inplace EA4/notebooks/04-data-stream
 streamlit run EA4/app.py                                                                                  # dashboard
 ```
 
+Para consultar el dashboard no es necesario instalar nada: está publicado en <https://healthcare-hospital-stay-analytics.streamlit.app/>.
+
 o ábralos con `jupyter lab`. Alternativa por script para EA1: `python -m src.pipeline`.
 
 **Token (opcional):** el dataset es público y el proyecto funciona sin él. Para evitar límites de uso anónimo copie `.env.example` a `.env` y complete `HF_TOKEN`, o defina la variable de entorno. `.env` está en `.gitignore`; nunca se imprime ni se sube.
 
-**Documento del proyecto (PDF):** `docs/proyecto_analisis_estancia_hospitalaria.pdf`.
+**Documento del proyecto (PDF):** [`docs/proyecto_analisis_estancia_hospitalaria.pdf`](docs/proyecto_analisis_estancia_hospitalaria.pdf). Reúne la necesidad, el diseño, la metodología, los resultados y las referencias del proyecto (normas APA). Sustituye al documento Word de las entregas anteriores.
 
 ## EA3 — Transformación y enriquecimiento de datos
 
@@ -137,6 +157,8 @@ jupyter nbconvert --to notebook --execute --inplace EA3/notebooks/03-data-transf
 ## EA4 — Métricas y Visualización de Datos con Streamlit
 
 ### Objetivo y relación con las preguntas de negocio
+
+**App publicada:** <https://healthcare-hospital-stay-analytics.streamlit.app/>
 
 Presentar, en una aplicación interactiva de Streamlit, las respuestas a la pregunta principal y a las preguntas P1-P5 (EA3) y PC1-PC3 (EA2) mediante indicadores, tablas y gráficos de Plotly calculados con el **dataset completo**. Cada sección muestra la métrica, su fórmula, el universo de datos y una interpretación generada con las cifras cargadas (sin números escritos a mano).
 
@@ -196,7 +218,7 @@ El workflow ejecuta también el notebook 04 después del 03, verifica que exista
 
 ### Despliegue en Streamlit Community Cloud
 
-La app no está publicada todavía. Para desplegarla: en <https://share.streamlit.io> elija **Create app → Deploy a public app from GitHub**, seleccione este repositorio, la rama `main` y **Main file path = `EA4/app.py`**. Streamlit Cloud usa `EA4/requirements.txt` (dependencias livianas: la app solo lee CSV) y el tema de `.streamlit/config.toml`. No se requieren secretos: la app no descarga datos.
+La app está publicada en **<https://healthcare-hospital-stay-analytics.streamlit.app/>**. Configuración del despliegue (por si hay que repetirlo): en <https://share.streamlit.io> elija **Create app → Deploy a public app from GitHub**, seleccione este repositorio, la rama `main` y **Main file path = `EA4/app.py`**. La app lee los archivos versionados de `EA4/results/tables` y `EA4/data/processed`; cuando GitHub Actions los actualiza en `main`, Streamlit Cloud toma la nueva versión del repositorio. Streamlit Cloud usa `EA4/requirements.txt` (dependencias livianas: la app solo lee CSV) y el tema de `.streamlit/config.toml`. No se requieren secretos: la app no descarga datos.
 
 ### Limitaciones y reglas de uso
 
@@ -205,7 +227,7 @@ La app no está publicada todavía. Para desplegarla: en <https://share.streamli
 * `staff_available` no está documentado y no es una medida validada de capacidad asistencial.
 * `clinical_complexity_score` es exploratorio (Emergency sin peso: 72,84 % de cobertura); los umbrales de personal y de estancia son reglas del proyecto.
 * No hay fechas ni camas por servicio: no se calculan ocupación ni giro de cama. Los resultados no se generalizan a otros hospitales.
-* La ficha del dataset no documenta licencia ni condiciones de redistribución; confirme el uso permitido antes de publicar copias de registros (la muestra) o la app.
+* La ficha del dataset no documenta licencia ni condiciones de redistribución; la app pública y la muestra de registros se publican con esa salvedad; confirme el uso permitido con el autor del dataset.
 
 ## Pruebas y GitHub Actions
 
@@ -223,6 +245,12 @@ El workflow `.github/workflows/ml-pipeline.yml` se ejecuta en `push` a `main`, e
 - Datos sin documentación de procedencia, licencia, periodo ni definiciones; no se generaliza a otros hospitales.
 - Análisis descriptivo, sin causalidad. `Admission_Deposit` no es necesariamente el costo total.
 - `patientid` no es único y tiene valores negativos; `health_conditions` tiene ~30 % de nulos sin significado documentado.
+
+## Documentación
+
+- Documento del proyecto: [`docs/proyecto_analisis_estancia_hospitalaria.pdf`](docs/proyecto_analisis_estancia_hospitalaria.pdf).
+- Dashboard: <https://healthcare-hospital-stay-analytics.streamlit.app/>.
+- Detalle de EA3 y EA4: [`EA3/README.md`](EA3/README.md) y [`EA4/README.md`](EA4/README.md).
 
 ## Fuentes
 
