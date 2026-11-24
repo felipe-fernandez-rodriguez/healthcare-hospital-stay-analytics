@@ -1,6 +1,6 @@
 RESUMEN EA4 - MÉTRICAS Y VISUALIZACIÓN (healthcare-hospital-stay-analytics)
 ======================================================================
-Fecha de generación: 2026-11-24 02:22:40 UTC+0000
+Fecha de generación: 2026-11-24 23:45:55 UTC+0000
 
 Dataset: Nicolybgs/healthcare_data
 Configuración: default

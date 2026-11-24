@@ -3,7 +3,7 @@
   "dataset_url": "https://huggingface.co/datasets/Nicolybgs/healthcare_data",
   "config": "default",
   "split": "train",
-  "generado": "2026-11-24T02:22:40+00:00",
+  "generado": "2026-11-24T23:45:55+00:00",
   "filas_cargadas": 500000,
   "columnas_originales": 15,
   "filas_analizadas": 500000,
